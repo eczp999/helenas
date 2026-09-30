@@ -1,0 +1,94 @@
+Espaços de fotografia do site.
+
+Para preencher: salve a imagem em assets/img/fotos/<id>.jpg (ou .webp,
+.avif, .png) e rode `python gerar.py`. O site passa a usar a foto real
+sozinho — não é preciso editar HTML.
+
+0 de 29 preenchidas.
+
+[  ] cat-beleza-e-detalhes      Procedimentos — cartão da categoria Beleza e detalhes
+                                  alt: Procedimentos de Beleza e detalhes
+
+[  ] cat-cabelo-e-head-spa      Procedimentos — cartão da categoria Cabelo e Head Spa
+                                  alt: Procedimentos de Cabelo e Head Spa
+
+[  ] cat-corpo-e-bem-estar      Procedimentos — cartão da categoria Corpo e bem-estar
+                                  alt: Procedimentos de Corpo e bem-estar
+
+[  ] cat-estetica-facial        Procedimentos — cartão da categoria Estética facial
+                                  alt: Procedimentos de Estética facial
+
+[  ] cat-topo-beleza-e-detalhes Categoria Beleza e detalhes — imagem de abertura
+                                  alt: Atendimento de beleza e detalhes na Clínica Helenas
+
+[  ] cat-topo-cabelo-e-head-spa Categoria Cabelo e Head Spa — imagem de abertura
+                                  alt: Atendimento de cabelo e head spa na Clínica Helenas
+
+[  ] cat-topo-corpo-e-bem-estar Categoria Corpo e bem-estar — imagem de abertura
+                                  alt: Atendimento de corpo e bem-estar na Clínica Helenas
+
+[  ] cat-topo-estetica-facial   Categoria Estética facial — imagem de abertura
+                                  alt: Atendimento de estética facial na Clínica Helenas
+
+[  ] clinica-espaco-1           A Clínica — mosaico, sala de estética
+                                  alt: Sala de estética avançada da Clínica Helenas
+
+[  ] clinica-espaco-2           A Clínica — mosaico, salão
+                                  alt: Ambiente do salão de beleza
+
+[  ] clinica-espaco-3           A Clínica — mosaico, recepção
+                                  alt: Detalhe da recepção
+
+[  ] clinica-espaco-4           A Clínica — mosaico, sala de massagem
+                                  alt: Sala reservada para massagens
+
+[  ] clinica-fachada            A Clínica — imagem de abertura (fachada ou recepção)
+                                  alt: Fachada da Clínica Helenas na avenida Presidente Castelo Branco
+
+[  ] equipe-julia-helenas       Equipe — retrato de Julia Helenas
+                                  alt: Retrato de Julia Helenas
+
+[  ] equipe-leticia-oliveira    Equipe — retrato de Letícia Oliveira
+                                  alt: Retrato de Letícia Oliveira
+
+[  ] equipe-lill-leite          Equipe — retrato de Lill Leite
+                                  alt: Retrato de Lill Leite
+
+[  ] equipe-maria-gabriella     Equipe — retrato de Maria Gabriella
+                                  alt: Retrato de Maria Gabriella
+
+[  ] espaco-detalhe             Home — mosaico do espaço, foto horizontal (detalhe/decoração)
+                                  alt: Detalhe da decoração da clínica
+
+[  ] espaco-recepcao            Home — mosaico do espaço, foto maior (recepção)
+                                  alt: Recepção da Clínica Helenas
+
+[  ] espaco-sala                Home — mosaico do espaço, foto vertical (sala de estética)
+                                  alt: Sala de atendimento estético
+
+[  ] espaco-salao               Home — mosaico do espaço, foto quadrada (salão)
+                                  alt: Área do salão de beleza
+
+[  ] hero                       Home — imagem do topo, primeira coisa que o visitante vê
+                                  alt: Recepção da Clínica Helenas em Londrina
+
+[  ] indice-beleza-e-detalhes   Home — miniatura que aparece ao passar o mouse na lista “Beleza e detalhes”
+                                  alt: Atendimento de Beleza e detalhes na Clínica Helenas
+
+[  ] indice-cabelo-e-head-spa   Home — miniatura que aparece ao passar o mouse na lista “Cabelo e Head Spa”
+                                  alt: Atendimento de Cabelo e Head Spa na Clínica Helenas
+
+[  ] indice-corpo-e-bem-estar   Home — miniatura que aparece ao passar o mouse na lista “Corpo e bem-estar”
+                                  alt: Atendimento de Corpo e bem-estar na Clínica Helenas
+
+[  ] indice-estetica-facial     Home — miniatura que aparece ao passar o mouse na lista “Estética facial”
+                                  alt: Atendimento de Estética facial na Clínica Helenas
+
+[  ] indice-noivas              Home — miniatura que aparece ao passar o mouse na lista “Noivas”
+                                  alt: Atendimento de Noivas na Clínica Helenas
+
+[  ] noiva-principal            Home e página Noivas — imagem principal do Dia da Noiva
+                                  alt: Noiva sendo preparada na Clínica Helenas
+
+[  ] noivas-abertura            Noivas — imagem de abertura (noiva pronta)
+                                  alt: Noiva pronta após o Dia da Noiva na Clínica Helenas
