@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>p</title><body>
+<script>
+var f=document.createElement('iframe'); f.src='/'; f.width=1440; f.height=900; f.style.border=0;
+f.addEventListener('load',function(){ setTimeout(function(){
+  var d=f.contentDocument, o=[];
+  d.querySelectorAll('main section[id]').forEach(function(s){
+    var r=s.getBoundingClientRect();
+    o.push(s.id+':'+Math.round(r.top+f.contentWindow.scrollY)+'-'+Math.round(r.height));
+  });
+  var ST=f.contentWindow.ScrollTrigger;
+  ST.getAll().filter(t=>t.pin).forEach(function(t){ o.push('PIN '+t.trigger.id+' '+Math.round(t.start)+'..'+Math.round(t.end)); });
+  document.title=o.join(' | ');
+},2200); });
+document.body.appendChild(f);
+</script>

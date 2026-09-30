@@ -2,3 +2,7 @@
 *.woff2 binary
 *.png binary
 *.ico binary
+*.webp binary
+*.jpg binary
+*.jpeg binary
+*.avif binary

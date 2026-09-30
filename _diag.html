@@ -1,0 +1,32 @@
+<!doctype html><meta charset="utf-8"><title>d</title><body>
+<script>
+var q=new URLSearchParams(location.search);
+var f=document.createElement('iframe');
+f.src='/'; f.width=+(q.get('w')||1440); f.height=+(q.get('h')||900); f.style.border=0;
+var erros=[];
+f.addEventListener('load',function(){
+  var w=f.contentWindow;
+  w.addEventListener('error',function(e){erros.push('ERRO: '+e.message);});
+  setTimeout(function(){
+    var d=f.contentDocument, g=w.gsap, ST=w.ScrollTrigger;
+    var larg=d.documentElement.clientWidth, trans=[];
+    d.querySelectorAll('*').forEach(function(el){
+      var r=el.getBoundingClientRect();
+      if(r.width>0 && (r.right>larg+1||r.left<-1)) trans.push(el.tagName+'.'+String(el.className).slice(0,28));
+    });
+    var pins = ST ? ST.getAll().filter(t=>t.pin).length : 'sem ST';
+    var tot  = ST ? ST.getAll().length : '-';
+    document.title = 'larg='+larg
+      +' docH='+d.documentElement.scrollHeight
+      +' telas='+(d.documentElement.scrollHeight/f.height).toFixed(1)
+      +' | gsap='+(g?g.version:'NAO')+' lenis='+(w.lenis?'sim':(w.Lenis?'lib-ok':'NAO'))
+      +' | triggers='+tot+' pins='+pins
+      +' | fx='+d.documentElement.classList.contains('fx')
+      +' js='+d.documentElement.classList.contains('js')
+      +' | modais='+d.querySelectorAll('dialog.modal').length
+      +' | TRANSBORDA='+(trans.length?trans.slice(0,6).join(' / '):'nenhum')
+      +' | erros='+(erros.length?erros.join(' ; '):'nenhum');
+  },2500);
+});
+document.body.appendChild(f);
+</script>

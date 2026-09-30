@@ -1,57 +1,61 @@
-# Site da Clínica Helenas — Londrina/PR
+# Site da Clínica Helenas — V3, página única
 
-**No ar em https://eczp999.github.io/helenas/**
+Estética avançada e salão de beleza em Londrina/PR, com o Dia da Noiva como
+especialidade da casa.
 
-Site institucional e comercial da Clínica Helenas: estética avançada e salão
-de beleza no mesmo endereço, com o Dia da Noiva como especialidade da casa.
-
-Doze páginas estáticas, sem Node, sem framework, sem build de JavaScript.
-Todo o conteúdo sai de um arquivo só (`dados.json`) e um script Python
-reescreve o HTML.
-
-> O endereço acima é o de apresentação, servido pelo GitHub Pages. Ele fica
-> num subcaminho (`/helenas/`), e é por isso que `site_url`, no `dados.json`,
-> precisa ser trocado quando a clínica tiver domínio próprio — ver
-> **Como publicar**.
+Esta é a **V3**: a V2 com a seção pinada consertada, três defeitos de
+renderização resolvidos e fotografia nos espaços que estavam em branco. A V2
+fica em `../v2` e a V1 — doze páginas separadas, no ar em
+`https://eczp999.github.io/helenas/` — em `../v1`. As três leem o mesmo tipo
+de arquivo de conteúdo e usam o mesmo gerador em Python puro: sem Node, sem
+framework, sem build de JavaScript.
 
 ---
 
+## O que mudou da V2 para a V3
+
+| | V2 | V3 |
+|---|---|---|
+| Seção A Clínica | 1471px de altura numa tela de 900 | cabe em 100svh, os três painéis inteiros |
+| `<h1>` do topo | nunca desenhava, em resolução nenhuma | aparece |
+| Ícone do Instagram | `path` inválido, 6 erros no console | desenha |
+| Fotografia | 15 espaços em branco | 11 preenchidos, em WebP |
+
+A correção da seção A Clínica é a de fundo: a seção pinada media 571px a mais
+que a tela, então o painel ficava com 40% da fotografia e metade do texto
+abaixo da dobra — e o conteúdo só aparecia inteiro quando o pin soltava, no
+terceiro painel. Agora a seção é uma grade de duas faixas dentro de 100svh e
+tudo o que ocupa altura é medido em `vh`, não em `vw`.
+
+O `<h1>` sumia por uma armadilha do GSAP: o CSS esconde as linhas com
+`translateY(101%)`, o GSAP decompõe esse transform numa matriz — onde não
+existe porcentagem — e o 101% vira `y = 101.757px`. Animar só `yPercent` de
+101 a 0 deixava o pixel de pé, e o título terminava uma linha inteira abaixo
+do invólucro que corta. A correção é declarar `y: 0` nos dois extremos.
+
+## O que mudou da V1 para a V2
+
+| | V1 | V2 |
+|---|---|---|
+| Estrutura | 12 páginas | 1 página + 6 modais |
+| Navegação | links entre pastas | âncoras e rolagem conduzida |
+| Movimento | transições simples | GSAP + ScrollTrigger + Lenis |
+| Procedimentos | uma página por categoria | modal `<dialog>`, já no HTML |
+
+O conteúdo dos modais **vem no HTML desde a entrega** — nada é buscado por
+`fetch` no clique. É isso que mantém procedimentos e Dia da Noiva indexáveis
+pelo Google, apesar de não terem endereço próprio.
+
 ## Como abrir
 
-O site é estático. Para ver localmente, sirva a pasta por HTTP — é o que
-reproduz uma hospedagem real, onde `/procedimentos/` resolve sozinho:
+Sirva a pasta por HTTP — é o que reproduz a hospedagem real:
 
 ```bash
 python -m http.server 8000
 ```
 
-Abrir o `index.html` com dois cliques também funciona: há um trecho em
-`assets/js/helenas.js` que, só no protocolo `file://`, completa os links de
-pasta com `index.html`. Numa hospedagem esse trecho nunca roda.
-
-## Como publicar
-
-Hoje o site é servido pelo **GitHub Pages**, a partir da raiz do branch
-`main`. Publicar uma alteração é `python gerar.py`, commit e push — o Pages
-reconstrói sozinho em cerca de um minuto. O arquivo `.nojekyll` existe para
-que os arquivos sejam servidos exatamente como estão.
-
-### Quando a clínica tiver domínio próprio
-
-1. troque `site_url` no `dados.json` pelo domínio real e apague a linha
-   `_site_url_pendente`;
-2. rode `python gerar.py` (as URLs canônicas, o sitemap e os links absolutos
-   da 404 saem daí — hoje eles carregam o prefixo `/helenas/`);
-3. aponte o DNS para o GitHub Pages e cadastre o domínio em
-   *Settings → Pages → Custom domain*, ou mude para outra hospedagem
-   estática: Netlify, Vercel, Cloudflare Pages, S3 ou hospedagem
-   compartilhada servem a pasta do mesmo jeito;
-4. fora do GitHub Pages, aponte a página de erro do servidor para `/404.html`;
-5. cadastre o domínio no Google Search Console e envie `/sitemap.xml`.
-
-Não é preciso subir `_fonte/`, `gerar.py` nem `dados.json` para o site
-funcionar — mas eles ficam versionados porque são a fonte do conteúdo, e
-nenhum deles é servido como página.
+Abrir o `index.html` com dois cliques também funciona, mas o `file://`
+costuma bloquear as fontes locais.
 
 ## Como editar o conteúdo
 
@@ -63,172 +67,132 @@ os textos de cada seção. Depois de editar:
 python gerar.py
 ```
 
-O gerador reescreve as doze páginas, o `sitemap.xml`, o `robots.txt`, os
-favicons e a imagem de compartilhamento. Ele também calcula uma impressão
-digital do CSS e do JS e a anexa como `?v=` nos ativos — assim uma
-atualização não fica escondida atrás do cache de quem já visitou.
+O gerador reescreve o `index.html`, a `404.html`, o `sitemap.xml`, o
+`robots.txt`, os favicons, a imagem de compartilhamento e os dois arquivos que
+o GitHub Pages exige. Ele também calcula uma impressão digital do CSS e do JS
+e a anexa como `?v=` nos ativos — assim uma atualização não fica escondida
+atrás do cache de quem já visitou.
 
-Para conferir se nada quebrou:
+Nada que esteja em `_pendencias`, no fim do `dados.json`, aparece na
+interface. É a lista do que ainda falta confirmar com a clínica.
 
-```bash
-python _fonte/verificar.py
+## As fotografias
+
+Onze dos quinze espaços estão preenchidos. As imagens vieram do site da
+própria casa — `juhelenas.com.br` —, em 1440×2160 e 1300×1950, reduzidas para
+1800px no lado maior e convertidas em WebP: **3,4 MB viraram 1,3 MB**, sem
+perda visível.
+
+Faltam quatro, e cada um por um motivo:
+
+| espaço | por quê |
+|---|---|
+| `equipe-maria-gabriella` | não há como dizer qual rosto é o dela |
+| `equipe-lill-leite` | idem |
+| `equipe-leticia-oliveira` | idem |
+| `trat-corpo-e-bem-estar` | não há foto de massagem ou terapia corporal |
+
+Campo sem arquivo continua **em branco** — superfície um tom fora do fundo,
+com filete, `aria-hidden`. Lê-se como espaço negativo intencional, não como
+imagem quebrada, e é por isso que os quatro que faltam não estragam a página.
+
+### Para preencher um espaço
+
+1. salve o arquivo em `assets/img/fotos/<id>.webp` (ou `.avif`, `.jpg`, `.png`);
+2. descreva a foto na seção `fotos` do `dados.json`;
+3. rode `python gerar.py`.
+
+O gerador troca o campo pela `<img>` sozinho, com `loading`, `decoding` e o
+texto alternativo já escritos. **Não é preciso editar HTML** — e como ele
+prefere `.webp` a `.jpg`, trocar o formato também não pede edição nenhuma.
+
+A lista dos quinze identificadores, com o texto alternativo e a contagem do
+que já foi preenchido, está em `_fonte/fotos-pendentes.txt`, reescrita a cada
+geração. Mínimo recomendado: **1400px** no lado maior para retrato e painel,
+**2400px** de largura para as bandas de abertura dos modais (2,45:1).
+
+### A seção `fotos` do `dados.json`
+
+```json
+"casa-2": {
+  "alt": "Atendimento no salão da Clínica Helenas: a cliente na cadeira...",
+  "foco": "50% 35%"
+}
 ```
 
-O verificador reclama de link morto, âncora inexistente, `<title>` fora de
-tamanho, hierarquia de cabeçalhos quebrada, imagem sem alternativa textual,
-link de WhatsApp com número diferente do `dados.json`, marcador de pendência
-que vazou para o texto visível, promessa de resultado e clichê de site de
-estética. Sai com código 1 se achar qualquer coisa — dá para pendurar num
-hook de commit.
+`alt` é o texto alternativo real da imagem — substitui o genérico da seção e é
+o que o leitor de tela anuncia. `foco` é o `object-position` do recorte, e
+existe porque o mesmo arquivo é cortado em proporções muito diferentes: um
+retrato 2:3 vira quase quadrado no painel da seção A Clínica e uma faixa
+2,45:1 na banda de abertura do modal. No centro, o corte decepa cabeça.
 
-## Como colocar as fotos
+### Direito de imagem
 
-Esta é a única coisa que falta para o site ficar completo.
+As fotos exibem clientes e modelos identificáveis. Já estão em uso comercial
+no site da própria casa, mas **confirme com a clínica que a autorização de uso
+de imagem cobre este site também** antes de publicar.
 
-O layout inteiro já está montado com **29 espaços de fotografia**. Enquanto a
-foto real não chega, cada espaço mostra uma superfície da marca com o
-monograma — nunca banco de imagens, nunca imagem gerada.
+### Um ponto em aberto
 
-Para preencher, salve o arquivo em `assets/img/fotos/` com o nome do espaço e
-rode `python gerar.py`:
+A `.hero__placa` é `display:none` abaixo de 62rem, e o navegador baixa a foto
+mesmo assim — medido, e também com `loading="lazy"`, que não evita o download
+de um `<img>` sem caixa. São ~85 KB que todo celular paga por uma imagem que
+não vê. A saída é decidir se a placa deve aparecer no celular.
 
-```
-assets/img/fotos/hero.jpg
-assets/img/fotos/equipe-julia-helenas.jpg
-assets/img/fotos/espaco-recepcao.webp
-```
+## Como publicar
 
-O gerador acha sozinho e troca o espaço reservado pela imagem, com
-`loading="lazy"` em todas menos a do topo da home. Não é preciso editar HTML.
+Rode `python gerar.py`, faça commit e suba. Em GitHub Pages, a partir da raiz
+do branch. O `.nojekyll` existe para que a pasta `_fonte` não seja engolida
+pelo Jekyll, que ignora tudo o que começa com sublinhado.
 
-A lista completa — nome do arquivo, onde a foto aparece e o texto alternativo
-já escrito — está em **`_fonte/fotos-pendentes.txt`**, reescrito a cada
-geração, com a contagem de quantas já foram preenchidas. As orientações de
-tamanho e recorte estão em `assets/img/fotos/LEIA-ME.txt`.
+### Quando a clínica tiver domínio próprio
 
-Prioridade, se as fotos chegarem aos poucos:
+1. troque `site_url` no `dados.json` pelo domínio real e apague a linha
+   `_site_url_pendente`;
+2. rode `python gerar.py` — a URL canônica, o `og:url`, o sitemap e os links
+   absolutos da `404.html` saem daí (hoje carregam o prefixo `/helenas/`);
+3. aponte o DNS e cadastre o domínio em *Settings → Pages → Custom domain*;
+4. fora do GitHub Pages, aponte a página de erro do servidor para `/404.html`;
+5. cadastre o domínio no Google Search Console e envie `/sitemap.xml`.
 
-1. `hero` — o topo da home;
-2. `equipe-julia-helenas` — o retrato da fundadora;
-3. `noiva-principal` e `noivas-abertura` — a especialidade da casa;
-4. `espaco-*` — o mosaico do ambiente;
-5. o resto.
-
----
-
-## O que existe
-
-| Página | Endereço | O que faz |
-| --- | --- | --- |
-| Home | `/` | Hero, números, manifesto, as cinco frentes, diferenciais, faixa de noivas, espaço, avaliações, FAQ curto, localização |
-| A Clínica | `/a-clinica/` | Origem, método de trabalho, o espaço |
-| Procedimentos | `/procedimentos/` | Índice das quatro categorias |
-| Estética facial | `/procedimentos/estetica-facial/` | Limpeza, rejuvenescimento, toxina, preenchimento |
-| Corpo e bem-estar | `/procedimentos/corpo-e-bem-estar/` | Massagens |
-| Cabelo e Head Spa | `/procedimentos/cabelo-e-head-spa/` | Head Spa, escova, penteado |
-| Beleza e detalhes | `/procedimentos/beleza-e-detalhes/` | Sobrancelha, maquiagem, unhas, depilação |
-| Noivas | `/noivas/` | Cronograma do Dia da Noiva, o que inclui, acompanhantes |
-| Equipe | `/equipe/` | Julia Helenas e a equipe |
-| Contato | `/contato/` | Dados, horários, formulário, mapa |
-| Privacidade | `/privacidade/` | O que o site faz com os dados |
-| Erro | `/404.html` | Página de endereço não encontrado |
-
-### Arquivos
+## Os arquivos
 
 ```
-dados.json                 todo o conteúdo do site
-gerar.py                   lê o dados.json e escreve as páginas
-_fonte/verificar.py        confere o HTML gerado
-_fonte/fotos-pendentes.txt relatório das fotos (gerado)
-assets/css/helenas.css     folha única, em 18 seções numeradas
-assets/js/helenas.js       comportamento, sem dependências
-assets/fonts/              Cormorant Garamond e Jost, variáveis, subconjunto latino
-assets/img/fotos/          onde entram as fotos reais
+dados.json              todo o conteúdo do site
+gerar.py                lê o dados.json e escreve tudo o que é servido
+index.html              gerado — não edite à mão
+404.html                gerado — endereços que não existem, de qualquer profundidade
+assets/css/helenas.css  escrito à mão
+assets/js/app.js        escrito à mão
+assets/js/vendor/       GSAP, ScrollTrigger e Lenis
+assets/fonts/           Cormorant e Jost, subconjunto latino, woff2 variável
+assets/img/fotos/       as fotografias, nomeadas pelo id do campo
+_fonte/                 anotações de produção; nada aqui é servido como página
+_diag.html              ferramenta de conferência: mede a página e lista erros
+_pos.html               ferramenta de conferência: posição e altura de cada seção
+_ver.html               ferramenta de conferência: abre a página numa altura fixa
 ```
 
----
+Os três `_*.html` são ferramentas de desenvolvimento, não páginas do site.
+Abra-os pelo servidor local. Eles não estão no `sitemap.xml` e a `robots.txt`
+não os divulga; se incomodarem em produção, apague-os — nada depende deles.
 
-## Decisões que valem explicação
+## A regra que governa o CSS e o JS
 
-**O formulário entrega no WhatsApp.** O site é estático e a clínica já atende
-por WhatsApp. Em vez de um formulário que manda e-mail para uma caixa que
-ninguém abre, o envio monta a mensagem com o que a pessoa escreveu e abre a
-conversa com o texto pronto. Nada é armazenado no site — por isso a página de
-privacidade pode dizer que não há cookie nem rastreador.
+**O layout sem a classe `.fx` é o layout legível, em fluxo normal.** Só o ramo
+desktop-com-movimento do `gsap.matchMedia` liga o empilhamento das seções
+pinadas. A consequência: celular, `prefers-reduced-motion`, JavaScript
+quebrado e robô de busca veem a mesma página inteira e navegável.
 
-**Nenhum preço aparece.** O único valor público encontrado foi o Head Spa numa
-campanha de terceiros. Publicar tabela de preços de estética é decisão
-comercial da clínica, não do site.
+Um script embutido no `<head>` esconde-para-animar antes da primeira pintura,
+para não haver piscada — e desfaz isso sozinho se o `app.js` não confirmar que
+subiu em 4 segundos. Nenhum conteúdo depende de JavaScript para ser visto.
 
-**Não há seção de tecnologias.** Um site de clínica premium normalmente
-apresenta os equipamentos. Não foi possível confirmar quais aparelhos a
-Helenas usa, e inventar marca de equipamento seria pior do que a ausência.
-Quando a clínica informar, a seção entra na página A Clínica — o
-`_pendencias.aparelhos` no `dados.json` guarda o lembrete.
+## Acessibilidade
 
-**Nenhuma promessa de resultado.** Resultado estético depende de pele,
-histórico, idade e cuidado em casa. O texto explica o que cada procedimento
-faz e o que ele não faz. O verificador trata promessa de resultado como erro.
-
-**As fotos não foram substituídas por banco de imagens.** O briefing pedia
-material real da clínica. Colocar foto de stock de uma mulher genérica
-descaracterizaria a casa e passaria despercebido até o dia em que alguém
-notasse — os espaços reservados deixam a pendência visível e fáceis de
-preencher.
-
----
-
-## Identidade
-
-Tirada do próprio material da clínica: o monograma `ch` em círculo, o rosé do
-perfil e dos destaques, o marfim quente do fundo.
-
-| Papel | Token | Valor |
-| --- | --- | --- |
-| Fundo | `--porcelana` | `#faf6f2` |
-| Seção alternada | `--areia` | `#f3eae2` |
-| Seção escura | `--carvao` | `#211a17` |
-| Texto | `--tinta` | `#2b211d` |
-| Marca | `--rose` / `--rose-forte` | `#b8807c` / `#8f5a56` |
-| Filete | `--ouro` | `#b08d57` |
-
-Tipografia: **Cormorant Garamond** (títulos, romana e itálica) e **Jost**
-(texto e interface). As duas são variáveis, auto-hospedadas, com subconjunto
-latino — 108 KB somados, sem chamada a servidor externo. A página inteira,
-com fontes, CSS e JS, fica em torno de 190 KB antes da compressão.
-
-Os tokens todos estão no topo do `helenas.css`, seção 2. Mudar a marca inteira
-é mudar aquelas linhas.
-
----
-
-## Dados da clínica usados no site
-
-Conferidos em fontes públicas em setembro de 2026. Quando algum mudar, o lugar
-de corrigir é o `dados.json`.
-
-- **Endereço:** Av. Presidente Castelo Branco, 180 — Presidente, Londrina/PR,
-  CEP 86061-335
-- **WhatsApp:** (43) 99199-4020
-- **Horário:** terça a sábado, das 9h às 18h30
-- **Instagram:** [@clinicahelenas](https://www.instagram.com/clinicahelenas/)
-- **Google:** 4,8 em 64 avaliações
-- **Razão social:** Clínica Helenas e Cia LTDA — CNPJ 47.258.431/0001-16,
-  aberta em 22/07/2022
-- **Fundadora:** Julia Helenas, biomédica esteta e maquiadora
-  ([@ju.helenas](https://www.instagram.com/ju.helenas/))
-
-## O que ainda falta confirmar
-
-A lista completa está em `_pendencias`, no fim do `dados.json`. Nada que esteja
-lá aparece no site. Os itens que mais mudam a página:
-
-- **domínio** — trocar `site_url`;
-- **fotografia** — os 29 espaços;
-- **equipe** — confirmar grafia dos nomes, funções e formações de Maria
-  Gabriella, Lill Leite e Letícia Oliveira, e escrever uma bio curta para cada
-  uma (enquanto `bio` estiver vazia, o bloco de texto não é renderizado);
-- **estacionamento, formas de pagamento e acessibilidade do local** — três
-  perguntas que clientes fazem e que hoje o site não responde;
-- **aparelhos e tecnologias** — abre uma seção nova em A Clínica;
-- **responsável técnico** — para o rodapé, se houver.
+- navegação por teclado em tudo, com foco visível e ordem previsível;
+- modais em `<dialog>` nativo: `Esc`, foco preso e inércia de fundo de graça;
+- o menu do celular tranca a rolagem sem perder a posição da página;
+- campos de fotografia vazios são `aria-hidden`: o leitor de tela não anuncia
+  uma foto que não existe;
+- contraste conferido; os numerais dourados usam um tom escurecido até 4,6:1.

@@ -1,52 +1,30 @@
-Espaços de fotografia do site.
+Campos de fotografia do site.
 
-Para preencher: salve a imagem em assets/img/fotos/<id>.jpg (ou .webp,
-.avif, .png) e rode `python gerar.py`. O site passa a usar a foto real
-sozinho — não é preciso editar HTML.
+Para preencher um campo: salve o arquivo em assets/img/fotos/<id>.jpg
+(ou .webp, .avif, .png) e rode `python gerar.py`. O gerador troca o campo
+pela foto sozinho — não é preciso editar HTML. O texto alternativo e o
+enquadramento de cada uma saem da seção `fotos` do dados.json; sem ficha
+lá, a foto entra com o texto genérico da seção e recorte centralizado.
 
-0 de 29 preenchidas.
+Mínimo recomendado: 1400px no lado maior para retrato e painel,
+2400px de largura para as bandas de abertura dos modais (2,45:1).
 
-[  ] cat-beleza-e-detalhes      Procedimentos — cartão da categoria Beleza e detalhes
-                                  alt: Procedimentos de Beleza e detalhes
+11 de 15 preenchidos.
 
-[  ] cat-cabelo-e-head-spa      Procedimentos — cartão da categoria Cabelo e Head Spa
-                                  alt: Procedimentos de Cabelo e Head Spa
+[ok] casa-1                     A casa — painel 1 (A clínica)
+                                  alt: Julia Helenas, biomédica esteta e fundadora da Clínica Helenas.
 
-[  ] cat-corpo-e-bem-estar      Procedimentos — cartão da categoria Corpo e bem-estar
-                                  alt: Procedimentos de Corpo e bem-estar
+[ok] casa-2                     A casa — painel 2 (O salão)
+                                  alt: Atendimento no salão da Clínica Helenas: a cliente na cadeira, de espelho na mão, com a profissional ao lado.
 
-[  ] cat-estetica-facial        Procedimentos — cartão da categoria Estética facial
-                                  alt: Procedimentos de Estética facial
+[ok] casa-3                     A casa — painel 3 (A mesma recepção)
+                                  alt: Entrada da Clínica Helenas, com o letreiro da casa na fachada.
 
-[  ] cat-topo-beleza-e-detalhes Categoria Beleza e detalhes — imagem de abertura
-                                  alt: Atendimento de beleza e detalhes na Clínica Helenas
+[ok] equipe-julia-helenas       Equipe — retrato de Julia Helenas
+                                  alt: Retrato de Julia Helenas, biomédica esteta, maquiadora e fundadora da Clínica Helenas.
 
-[  ] cat-topo-cabelo-e-head-spa Categoria Cabelo e Head Spa — imagem de abertura
-                                  alt: Atendimento de cabelo e head spa na Clínica Helenas
-
-[  ] cat-topo-corpo-e-bem-estar Categoria Corpo e bem-estar — imagem de abertura
-                                  alt: Atendimento de corpo e bem-estar na Clínica Helenas
-
-[  ] cat-topo-estetica-facial   Categoria Estética facial — imagem de abertura
-                                  alt: Atendimento de estética facial na Clínica Helenas
-
-[  ] clinica-espaco-1           A Clínica — mosaico, sala de estética
-                                  alt: Sala de estética avançada da Clínica Helenas
-
-[  ] clinica-espaco-2           A Clínica — mosaico, salão
-                                  alt: Ambiente do salão de beleza
-
-[  ] clinica-espaco-3           A Clínica — mosaico, recepção
-                                  alt: Detalhe da recepção
-
-[  ] clinica-espaco-4           A Clínica — mosaico, sala de massagem
-                                  alt: Sala reservada para massagens
-
-[  ] clinica-fachada            A Clínica — imagem de abertura (fachada ou recepção)
-                                  alt: Fachada da Clínica Helenas na avenida Presidente Castelo Branco
-
-[  ] equipe-julia-helenas       Equipe — retrato de Julia Helenas
-                                  alt: Retrato de Julia Helenas
+[ok] equipe-julia-helenas-modal Modal de Julia Helenas — banda de abertura
+                                  alt: Fotografias de clientes espalhadas sobre a mesa, na Clínica Helenas.
 
 [  ] equipe-leticia-oliveira    Equipe — retrato de Letícia Oliveira
                                   alt: Retrato de Letícia Oliveira
@@ -57,38 +35,23 @@ sozinho — não é preciso editar HTML.
 [  ] equipe-maria-gabriella     Equipe — retrato de Maria Gabriella
                                   alt: Retrato de Maria Gabriella
 
-[  ] espaco-detalhe             Home — mosaico do espaço, foto horizontal (detalhe/decoração)
-                                  alt: Detalhe da decoração da clínica
+[ok] hero                       Hero — placa vertical do topo
+                                  alt: Julia Helenas no espaço da Clínica Helenas, diante do letreiro luminoso da casa.
 
-[  ] espaco-recepcao            Home — mosaico do espaço, foto maior (recepção)
-                                  alt: Recepção da Clínica Helenas
+[ok] noiva                      Noivas — retrato vertical ao lado do cronograma
+                                  alt: Noiva pronta na Clínica Helenas, de véu e buquê.
 
-[  ] espaco-sala                Home — mosaico do espaço, foto vertical (sala de estética)
-                                  alt: Sala de atendimento estético
+[ok] noivas-banda               Modal de noivas — banda de abertura
+                                  alt: Noiva sob o véu, pronta para a cerimônia, na Clínica Helenas.
 
-[  ] espaco-salao               Home — mosaico do espaço, foto quadrada (salão)
-                                  alt: Área do salão de beleza
+[ok] trat-beleza-e-detalhes     Modal de Beleza e detalhes — banda de abertura
+                                  alt: Maquiagem sendo aplicada na Clínica Helenas.
 
-[  ] hero                       Home — imagem do topo, primeira coisa que o visitante vê
-                                  alt: Recepção da Clínica Helenas em Londrina
+[ok] trat-cabelo-e-head-spa     Modal de Cabelo e Head Spa — banda de abertura
+                                  alt: Cabelo tratado e finalizado no salão da Clínica Helenas.
 
-[  ] indice-beleza-e-detalhes   Home — miniatura que aparece ao passar o mouse na lista “Beleza e detalhes”
-                                  alt: Atendimento de Beleza e detalhes na Clínica Helenas
+[  ] trat-corpo-e-bem-estar     Modal de Corpo e bem-estar — banda de abertura
+                                  alt: Atendimento de corpo e bem-estar
 
-[  ] indice-cabelo-e-head-spa   Home — miniatura que aparece ao passar o mouse na lista “Cabelo e Head Spa”
-                                  alt: Atendimento de Cabelo e Head Spa na Clínica Helenas
-
-[  ] indice-corpo-e-bem-estar   Home — miniatura que aparece ao passar o mouse na lista “Corpo e bem-estar”
-                                  alt: Atendimento de Corpo e bem-estar na Clínica Helenas
-
-[  ] indice-estetica-facial     Home — miniatura que aparece ao passar o mouse na lista “Estética facial”
-                                  alt: Atendimento de Estética facial na Clínica Helenas
-
-[  ] indice-noivas              Home — miniatura que aparece ao passar o mouse na lista “Noivas”
-                                  alt: Atendimento de Noivas na Clínica Helenas
-
-[  ] noiva-principal            Home e página Noivas — imagem principal do Dia da Noiva
-                                  alt: Noiva sendo preparada na Clínica Helenas
-
-[  ] noivas-abertura            Noivas — imagem de abertura (noiva pronta)
-                                  alt: Noiva pronta após o Dia da Noiva na Clínica Helenas
+[ok] trat-estetica-facial       Modal de Estética facial — banda de abertura
+                                  alt: Procedimento injetável facial conduzido na Clínica Helenas.
