@@ -1,11 +1,18 @@
 # Site da Clínica Helenas — Londrina/PR
 
+**No ar em https://eczp999.github.io/helenas/**
+
 Site institucional e comercial da Clínica Helenas: estética avançada e salão
 de beleza no mesmo endereço, com o Dia da Noiva como especialidade da casa.
 
 Doze páginas estáticas, sem Node, sem framework, sem build de JavaScript.
 Todo o conteúdo sai de um arquivo só (`dados.json`) e um script Python
 reescreve o HTML.
+
+> O endereço acima é o de apresentação, servido pelo GitHub Pages. Ele fica
+> num subcaminho (`/helenas/`), e é por isso que `site_url`, no `dados.json`,
+> precisa ser trocado quando a clínica tiver domínio próprio — ver
+> **Como publicar**.
 
 ---
 
@@ -24,17 +31,27 @@ pasta com `index.html`. Numa hospedagem esse trecho nunca roda.
 
 ## Como publicar
 
-Suba a pasta inteira em qualquer hospedagem estática — Netlify, Vercel,
-Cloudflare Pages, GitHub Pages, S3 ou hospedagem compartilhada. Antes:
+Hoje o site é servido pelo **GitHub Pages**, a partir da raiz do branch
+`main`. Publicar uma alteração é `python gerar.py`, commit e push — o Pages
+reconstrói sozinho em cerca de um minuto. O arquivo `.nojekyll` existe para
+que os arquivos sejam servidos exatamente como estão.
+
+### Quando a clínica tiver domínio próprio
 
 1. troque `site_url` no `dados.json` pelo domínio real e apague a linha
    `_site_url_pendente`;
-2. rode `python gerar.py` de novo (as URLs canônicas e o sitemap saem daí);
-3. aponte a página de erro do servidor para `/404.html`;
-4. cadastre o domínio no Google Search Console e envie `/sitemap.xml`.
+2. rode `python gerar.py` (as URLs canônicas, o sitemap e os links absolutos
+   da 404 saem daí — hoje eles carregam o prefixo `/helenas/`);
+3. aponte o DNS para o GitHub Pages e cadastre o domínio em
+   *Settings → Pages → Custom domain*, ou mude para outra hospedagem
+   estática: Netlify, Vercel, Cloudflare Pages, S3 ou hospedagem
+   compartilhada servem a pasta do mesmo jeito;
+4. fora do GitHub Pages, aponte a página de erro do servidor para `/404.html`;
+5. cadastre o domínio no Google Search Console e envie `/sitemap.xml`.
 
-Não é preciso subir `_fonte/`, `gerar.py` nem `dados.json` — mas também não
-faz mal: nenhum deles é servido como página.
+Não é preciso subir `_fonte/`, `gerar.py` nem `dados.json` para o site
+funcionar — mas eles ficam versionados porque são a fonte do conteúdo, e
+nenhum deles é servido como página.
 
 ## Como editar o conteúdo
 
