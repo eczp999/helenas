@@ -1425,3 +1425,145 @@ dialog.modal[data-fechando="sim"]::backdrop { opacity: 0; transition-duration: 2
   /* Os três discos do rodapé passam de 40 para 44. */
   .rodape__sociais a { width: 44px; height: 44px; }
 }
+
+/* -------------------------------------------------------------------------
+   22. V5 — cartões de tratamento, pilares e Head Spa
+
+   Na V4 as quatro frentes eram uma lista de texto: para saber o que cada uma
+   reunia era preciso abrir o modal. Aqui o cartão mostra fotografia, resumo e
+   a lista do que reúne ANTES de qualquer clique — é o que o visitante que
+   chegou procurando um procedimento específico precisa ver primeiro.
+   ------------------------------------------------------------------------- */
+.trat__cabeca { display: grid; gap: var(--e4); max-width: 46ch; margin-bottom: clamp(var(--e7), 5vw, var(--e9)); }
+
+.cartoes { display: grid; gap: var(--e5); }
+@media (min-width: 46rem) { .cartoes { grid-template-columns: repeat(2, 1fr); gap: var(--e6); } }
+
+.cartao { display: grid; }
+.cartao__botao {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  background: var(--porcelana);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-campo);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--rapido), transform var(--lento), box-shadow var(--lento);
+}
+.cartao__foto { display: block; overflow: clip; }
+.cartao__foto .campo { aspect-ratio: 5 / 3; border-radius: 0; border: 0; }
+.cartao__foto img { transition: scale var(--lento); }
+.cartao__corpo { display: grid; align-content: start; gap: var(--e2); padding: var(--e5) var(--e5) var(--e6); }
+.cartao__etiqueta { font-size: var(--t-etiqueta); letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose-forte); }
+.cartao__nome { font-family: var(--serifa); font-size: clamp(1.5rem, 1.3rem + 0.9vw, 2rem); font-weight: 300; line-height: 1.1; }
+.cartao__resumo { margin-top: var(--e2); color: var(--tinta-suave); font-size: 0.9375rem; }
+/* O que a frente reúne: os nomes dos procedimentos, para a cliente reconhecer
+   o que procura sem abrir nada. */
+.cartao__reune {
+  margin-top: var(--e4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+.cartao__reune li {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--tinta-suave);
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  padding: 4px var(--e3);
+}
+.cartao__mais {
+  margin-top: var(--e5);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e3);
+  font-size: var(--t-etiqueta);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rose-forte);
+}
+.cartao__mais .seta { width: 20px; height: 20px; transition: transform var(--lento); }
+/* Cartão sem fotografia — hoje só Corpo e bem-estar, até a clínica mandar uma.
+   Como ele divide a fileira com um cartão que TEM foto, a grade o estica até a
+   mesma altura, e o conteúdo encostado no topo deixava meia caixa vazia. Aqui
+   o conteúdo centraliza e o fundo ganha um tom de rosé: lê-se como variação
+   proposital da série, não como cartão que ficou faltando alguma coisa.
+   Quando a foto chegar, o cartão volta ao formato dos outros sozinho. */
+.cartao--sem-foto .cartao__botao { grid-template-rows: 1fr; }
+.cartao--sem-foto .cartao__corpo {
+  align-content: center;
+  background: color-mix(in oklab, var(--porcelana) 82%, var(--rose));
+  padding-block: clamp(var(--e7), 5vw, var(--e9));
+}
+.cartao__botao:focus-visible { outline: 2px solid var(--rose-forte); outline-offset: 3px; }
+
+/* ---- Pilares dos diferenciais ---- */
+.pilares { margin-top: clamp(var(--e6), 4vw, var(--e8)); display: grid; gap: var(--e5); }
+@media (min-width: 40rem) { .pilares { grid-template-columns: repeat(3, 1fr); gap: var(--e6); } }
+.pilar { display: grid; gap: var(--e2); align-content: start; padding-top: var(--e4); border-top: 1px solid var(--pg-linha); }
+.pilar h3 { font-family: var(--sans); font-size: var(--t-etiqueta); letter-spacing: 0.18em; text-transform: uppercase; color: var(--rose-forte); font-weight: 500; }
+.pilar p { color: var(--tinta-suave); font-size: 0.9375rem; }
+
+/* ---- Head Spa ----
+   Seção montada para funcionar SEM fotografia: a clínica ainda não tem uma do
+   procedimento, e uma placa vazia aqui — logo no destaque comercial — faria
+   mais mal que a ausência. Sem foto, o texto ocupa a largura de leitura e os
+   passos viram a imagem da seção. */
+.headspa { background: var(--areia); }
+.headspa__grade { display: grid; gap: clamp(var(--e6), 5vw, var(--e9)); align-items: center; }
+@media (min-width: 58rem) { .headspa__grade { grid-template-columns: 1fr 0.9fr; } }
+.headspa--so-texto .headspa__grade { grid-template-columns: 1fr; max-width: 62ch; }
+.headspa__texto { display: grid; gap: var(--e4); align-content: start; }
+.headspa__texto h2 { font-size: var(--t-h2); font-weight: 300; }
+.headspa__duracao {
+  font-family: var(--serifa);
+  font-style: italic;
+  font-size: 1.375rem;
+  color: var(--rose-forte);
+}
+.passos { display: grid; gap: var(--e3); margin-top: var(--e2); }
+.passos li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e4);
+  font-size: 0.9375rem;
+  color: var(--tinta-suave);
+  padding-bottom: var(--e3);
+  border-bottom: 1px solid var(--linha);
+}
+.passos li:last-child { border-bottom: 0; }
+.passo__n {
+  font-family: var(--serifa);
+  font-size: 1rem;
+  color: var(--rose-forte);
+  flex: none;
+  min-width: 1.4em;
+}
+.headspa__nota { font-size: var(--t-mini); color: var(--tinta-clara); max-width: 54ch; }
+.headspa__foto .campo { aspect-ratio: 4 / 5; }
+
+/* Hover só onde há ponteiro de verdade — ver a seção 20. */
+@media (hover: hover) and (pointer: fine) {
+  .cartao__botao:hover { border-color: var(--rose); transform: translateY(-3px); box-shadow: 0 18px 40px -28px rgba(60, 40, 35, 0.5); }
+  .cartao__botao:hover .cartao__mais .seta { transform: translateX(5px); }
+  .cartao__botao:hover .cartao__foto img { scale: 1.04; }
+}
+
+/* Resposta imediata ao toque. Sem isto, no celular existe um intervalo entre
+   o dedo encostar e qualquer coisa acontecer — e o reflexo é tocar de novo. */
+.botao:active, .cartao__botao:active, .indice__botao:active,
+.menu-botao:active, .modal__fechar:active, .zap:active {
+  transform: scale(0.985);
+}
+.botao, .cartao__botao, .indice__botao, .menu-botao, .modal__fechar, .zap {
+  -webkit-tap-highlight-color: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .botao:active, .cartao__botao:active, .indice__botao:active,
+  .menu-botao:active, .modal__fechar:active, .zap:active { transform: none; }
+}

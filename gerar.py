@@ -277,9 +277,14 @@ def schema():
 
 def cabeca(titulo=None, desc=None, caminho="", robots="index, follow, max-image-preview:large",
            com_schema=True):
-    titulo = titulo or "%s — Estética avançada e salão de beleza em %s" % (C["nome"], C["cidade"])
-    desc = desc or ("Clínica de estética avançada e salão de beleza em Londrina. Pele, cabelo, unhas, "
-                    "sobrancelhas, maquiagem e Dia da Noiva no mesmo endereço. Agende pelo WhatsApp.")
+    # Busca local: os termos que importam são "clínica de estética em
+    # Londrina", "salão de beleza em Londrina", "Head Spa Londrina" e "Dia da
+    # Noiva Londrina". Todos cabem naturalmente — o título não repete cidade e
+    # a descrição não empilha palavra-chave, que o Google desconta.
+    titulo = titulo or "Clínica de estética e salão de beleza em %s — %s" % (C["cidade"], C["nome"])
+    desc = desc or ("Estética avançada, cabelo, Head Spa, maquiagem e Dia da Noiva em Londrina, "
+                    "no mesmo endereço. Atendimento personalizado de terça a sábado. "
+                    "Agende pelo WhatsApp.")
     return """<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -426,6 +431,10 @@ def ato_hero():
 def ato_manifesto():
     m = D["manifesto"]
     paras = "".join('<p data-fx>%s</p>' % e(p) for p in m["paragrafos"])
+    # Três diferenciais objetivos, no lugar de três parágrafos de filosofia.
+    pilares = "".join(
+        '<li class="pilar" data-fx><h3>%s</h3><p>%s</p></li>'
+        % (e(p["titulo"]), e(p["texto"])) for p in m.get("pilares", []))
     return """<section class="ato" id="manifesto" aria-labelledby="t-manifesto">
 <div class="env manifesto__grade">
 <div class="manifesto__titulo">
@@ -433,6 +442,7 @@ def ato_manifesto():
 <h2 id="t-manifesto" data-fx="titulo">%(titulo)s</h2>
 </div>
 <div class="manifesto__corpo">%(paras)s
+<ul class="pilares">%(pilares)s</ul>
 <div class="assinatura" data-fx>
 <span class="assinatura__nome">%(nome)s</span>
 <span class="assinatura__papel">%(papel)s</span>
@@ -441,7 +451,7 @@ def ato_manifesto():
 </div>
 </section>
 """ % {"etiq": e(m["etiqueta"]), "titulo": e(m["titulo"]), "paras": paras,
-       "nome": e(m["assinatura"]), "papel": e(m["assinatura_papel"])}
+       "pilares": pilares, "nome": e(m["assinatura"]), "papel": e(m["assinatura_papel"])}
 
 
 def ato_casa():
@@ -497,31 +507,81 @@ def ato_numeros():
 
 def ato_tratamentos():
     t = D["tratamentos"]
-    linhas = ""
+    cartoes = ""
     for i, cat in enumerate(CATS, 1):
-        linhas += """<li class="indice__item" data-fx>
-<button class="indice__botao" type="button" data-abre="modal-%(slug)s"
+        # O que a frente reúne, dito antes do clique: são os nomes dos
+        # procedimentos que já estão no dados.json, nada inventado.
+        reune = "".join('<li>%s</li>' % e(p["nome"]) for p in cat["procedimentos"])
+        foto = campo("trat-%s" % cat["slug"],
+                     "Atendimento de %s na Clínica Helenas" % cat["nome"].lower(),
+                     "campo", "Cartão de %s" % cat["nome"])
+        # Sem arquivo, campo() devolve a placa vazia. Num cartão isso lê como
+        # imagem quebrada, então o cartão simplesmente não recebe foto.
+        tem_foto = "campo--real" in foto
+        cartoes += """<li class="cartao%(larg)s" data-fx>
+<button class="cartao__botao" type="button" data-abre="modal-%(slug)s"
         aria-haspopup="dialog" aria-label="%(rotulo)s">
-<span class="indice__ordem" aria-hidden="true">%(ord)02d</span>
-<span class="indice__corpo">
-<span class="indice__nome">%(nome)s</span>
-<span class="indice__resumo">%(resumo)s</span>
-<span class="indice__mais">%(abrir)s</span>
-</span>
-%(seta)s</button></li>""" % {"slug": cat["slug"], "ord": i, "nome": e(cat["nome"]),
-                             "resumo": e(cat["resumo"]), "abrir": e(t["abrir"]), "seta": SETA_GRANDE,
-                             "rotulo": e("%s — %s" % (t["abrir"], cat["nome"]))}
+%(foto)s<span class="cartao__corpo">
+<span class="cartao__etiqueta">%(etiq)s</span>
+<span class="cartao__nome">%(nome)s</span>
+<span class="cartao__resumo">%(resumo)s</span>
+<ul class="cartao__reune" aria-hidden="true">%(reune)s</ul>
+<span class="cartao__mais">%(abrir)s %(seta)s</span>
+</span></button></li>""" % {
+            "slug": cat["slug"], "nome": e(cat["nome"]), "etiq": e(cat["etiqueta"]),
+            "resumo": e(cat["resumo"]), "reune": reune, "abrir": e(t["abrir"]),
+            "seta": SETA, "foto": '<span class="cartao__foto">%s</span>' % foto if tem_foto else "",
+            "larg": "" if tem_foto else " cartao--sem-foto",
+            "rotulo": e("%s — %s" % (t["abrir"], cat["nome"]))}
     return """<section class="ato ato--areia" id="tratamentos" aria-labelledby="t-trat">
-<div class="env trat__grade">
-<div class="trat__coluna">
+<div class="env">
+<div class="trat__cabeca">
 <p class="etiqueta" data-fx="etiqueta">%(etiq)s</p>
 <h2 id="t-trat" data-fx="titulo">%(titulo)s</h2>
-<p data-fx>%(texto)s</p>
+<p class="texto-g" data-fx>%(texto)s</p>
 </div>
-<ul class="indice">%(linhas)s</ul>
+<ul class="cartoes">%(cartoes)s</ul>
 </div>
 </section>
-""" % {"etiq": e(t["etiqueta"]), "titulo": e(t["titulo"]), "texto": e(t["texto"]), "linhas": linhas}
+""" % {"etiq": e(t["etiqueta"]), "titulo": e(t["titulo"]), "texto": e(t["texto"]),
+       "cartoes": cartoes}
+
+
+def ato_head_spa():
+    """O procedimento mais completo da casa numa sessão só, e o que mais rende
+    comercialmente. Ganhou seção própria.
+
+    Tudo o que está aqui já estava confirmado no dados.json — a duração, as
+    etapas e o fato de atender homens e mulheres saíram do próprio
+    procedimento e da pergunta frequente. Não há indicação clínica nem
+    promessa sobre queda de cabelo: Head Spa cuida do couro cabeludo, e isso
+    não é tratamento médico.
+
+    A seção foi desenhada para funcionar SEM fotografia. Quando a clínica
+    mandar uma foto real do procedimento, ela entra sozinha."""
+    s = D["head_spa"]
+    etapas = "".join('<li><span class="passo__n" aria-hidden="true">%d</span>%s</li>'
+                     % (i, e(x)) for i, x in enumerate(s["etapas"], 1))
+    foto = campo("head-spa", s["fotos_alt"] if "fotos_alt" in s else "Head Spa na Clínica Helenas",
+                 "campo", "Head Spa — seção de destaque")
+    bloco_foto = '<div class="headspa__foto" data-fx>%s</div>' % foto if "campo--real" in foto else ""
+    return """<section class="ato headspa%(semfoto)s" id="head-spa" aria-labelledby="t-headspa">
+<div class="env headspa__grade">
+<div class="headspa__texto">
+<p class="etiqueta" data-fx="etiqueta">%(etiq)s</p>
+<h2 id="t-headspa" data-fx="titulo">%(titulo)s</h2>
+<p class="texto-g" data-fx>%(texto)s</p>
+<p class="headspa__duracao" data-fx>%(duracao)s</p>
+<ol class="passos" data-fx>%(etapas)s</ol>
+<p class="headspa__nota" data-fx>%(nota)s</p>
+<div data-fx><a class="botao botao--primario" href="%(zap)s" target="_blank" rel="noopener">%(ico)s %(cta)s</a></div>
+</div>
+%(foto)s</div>
+</section>
+""" % {"etiq": e(s["etiqueta"]), "titulo": e(s["titulo"]), "texto": e(s["texto"]),
+       "duracao": e(s["duracao"]), "etapas": etapas, "nota": e(s["nota"]),
+       "zap": e(zap(W["head_spa"])), "ico": ICO_ZAP, "cta": e(s["cta"]),
+       "foto": bloco_foto, "semfoto": "" if bloco_foto else " headspa--so-texto"}
 
 
 def ato_noivas():
@@ -1142,14 +1202,15 @@ def principal():
         cabeca(),
         topo(),
         '<main id="conteudo">',
-        ato_hero(),
-        ato_manifesto(),
-        ato_casa(),
-        ato_numeros(),
-        ato_tratamentos(),
-        ato_noivas(),
-        ato_equipe(),
-        ato_depoimentos(),
+        ato_hero(),          # porcelana
+        ato_tratamentos(),   # areia   — o que a casa faz, logo de cara
+        ato_manifesto(),     # porcelana — por que a Helenas
+        ato_casa(),          # ESCURA  — a sequência pinada
+        ato_head_spa(),      # areia   — o destaque comercial
+        ato_noivas(),        # ESCURA  — a especialidade da casa
+        ato_equipe(),        # porcelana
+        ato_depoimentos(),   # véu
+        ato_numeros(),       # porcelana — credibilidade junto das avaliações
         ato_duvidas(),
         ato_visita(),
         "</main>",

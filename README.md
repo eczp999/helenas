@@ -1,12 +1,56 @@
-# Site da Clínica Helenas — V4, página única
+# Site da Clínica Helenas — V5, página única
 
 Estética avançada e salão de beleza em Londrina/PR, com o Dia da Noiva como
 especialidade da casa.
 
-Esta é a **V4**: a V3 com o celular tratado como plataforma de primeira
-classe. A V3 fica em `../v3`, a V2 em `../v2` e a V1 — doze páginas separadas
-— em `../v1`. Todas leem o mesmo tipo de arquivo de conteúdo e usam o mesmo
-gerador em Python puro: sem Node, sem framework, sem build de JavaScript.
+Esta é a **V5**: reformulação de conteúdo, ordem e conversão sobre a base
+técnica da V4. As versões anteriores ficam em `../v1` a `../v4`.
+
+---
+
+## O que mudou da V4 para a V5
+
+| | V4 | V5 |
+|---|---|---|
+| Abertura | "A casa onde Londrina se prepara" | "Estética avançada e beleza em Londrina" |
+| Ordem | filosofia antes de serviço | serviço primeiro, história depois |
+| Tratamentos | lista de texto; só o modal mostrava o conteúdo | cartões com foto e o que cada frente reúne |
+| Head Spa | um procedimento dentro de um modal | seção própria, com as cinco etapas |
+| Diferenciais | três parágrafos comparando com o mercado | três pilares objetivos |
+| Botões | cinco variações sem lógica | hierarquia fixa, 21 mensagens de WhatsApp contextuais |
+| "Três anos de casa aberta" | errado desde 2025 | "Desde 2022", que não desatualiza |
+
+### O ângulo mudou
+
+A V4 explicava como a clínica funciona por dentro. A V5 fala do que a cliente
+ganha. Saíram as comparações com o mercado — inclusive "uma sobrancelha aqui
+não é encaixe de quinze minutos entre dois atendimentos", que dizia mal do
+concorrente em vez de dizer bem da casa.
+
+**Nenhum fato novo entrou.** Preço, duração, tecnologia, certificação, prêmio,
+número de clientes e promessa de resultado continuam fora. O que a seção do
+Head Spa diz — 1h30, cinco etapas, atende homens e mulheres — já estava
+confirmado no `dados.json` da V4.
+
+### Head Spa sem fotografia
+
+A seção foi montada para funcionar **sem** imagem, porque a clínica ainda não
+tem uma foto do procedimento e uma placa vazia logo no destaque comercial faria
+mais mal que a ausência. Quando a foto chegar, salve em
+`assets/img/fotos/head-spa.webp` e rode o gerador: ela entra sozinha e a seção
+muda de uma para duas colunas.
+
+### Dois defeitos no formulário
+
+- o foco do primeiro campo inválido cobria `input` e `textarea`, mas **não**
+  `select` — e existe um `<select>` no formulário. O aviso aparecia e a pessoa
+  não descobria onde estava o erro;
+- o `window.open` não tinha alternativa. Com bloqueador de pop-up, o WhatsApp
+  não abria e o aviso dizia que tinha dado certo. Agora, se a janela for
+  bloqueada, aparece um link de verdade para tocar.
+
+O formulário **não envia nada** — monta a mensagem e abre o WhatsApp. O texto
+diz exatamente isso.
 
 ---
 

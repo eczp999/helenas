@@ -52,12 +52,13 @@
     "horario_curto": "Ter. a sáb., 9h–18h30"
   },
   "whatsapp": {
-    "agendar": "Olá! Vim pelo site da Clínica Helenas e gostaria de agendar um horário. Quais datas vocês têm disponíveis?",
-    "avaliacao": "Olá! Vim pelo site da Clínica Helenas e gostaria de marcar uma avaliação para entender qual protocolo combina comigo.",
-    "conversar": "Olá! Vim pelo site da Clínica Helenas e fiquei com algumas dúvidas. Posso falar com vocês por aqui?",
-    "noiva": "Olá! Vim pelo site da Clínica Helenas e quero saber sobre o Dia da Noiva. Meu casamento está marcado para ",
+    "agendar": "Olá! Vim pelo site da Clínica Helenas e gostaria de agendar um horário.",
+    "avaliacao": "Olá! Vim pelo site da Clínica Helenas e gostaria de agendar uma avaliação para entender qual tratamento faz sentido para mim.",
+    "conversar": "Olá! Vim pelo site da Clínica Helenas e fiquei com uma dúvida.",
+    "noiva": "Olá! Vim pelo site da Clínica Helenas e quero conhecer o Dia da Noiva. A data do meu casamento é ",
     "categoria": "Olá! Vim pelo site da Clínica Helenas e gostaria de saber mais sobre {assunto}.",
-    "procedimento": "Olá! Vi {assunto} no site da Clínica Helenas e gostaria de mais informações."
+    "procedimento": "Olá! Vi {assunto} no site da Clínica Helenas e gostaria de mais informações.",
+    "head_spa": "Olá! Vim pelo site da Clínica Helenas e gostaria de saber mais sobre o Head Spa."
   },
   "navegacao": [
     {
@@ -65,20 +66,20 @@
       "rotulo": "Início"
     },
     {
-      "id": "a-casa",
-      "rotulo": "A Clínica"
-    },
-    {
       "id": "tratamentos",
       "rotulo": "Tratamentos"
     },
     {
-      "id": "noivas",
-      "rotulo": "Noivas"
+      "id": "a-casa",
+      "rotulo": "A Clínica"
     },
     {
-      "id": "equipe",
-      "rotulo": "Equipe"
+      "id": "head-spa",
+      "rotulo": "Head Spa"
+    },
+    {
+      "id": "noivas",
+      "rotulo": "Noivas"
     },
     {
       "id": "visita",
@@ -86,44 +87,56 @@
     }
   ],
   "hero": {
-    "etiqueta": "Londrina · desde 2022",
+    "etiqueta": "Clínica de estética e salão de beleza",
     "titulo_linhas": [
-      "A casa onde",
-      "Londrina",
-      "se prepara"
+      "Estética avançada",
+      "e beleza",
+      "em Londrina"
     ],
     "linha_italica": 2,
-    "texto": "Estética avançada e salão de beleza no mesmo endereço. Do cuidado de todo mês ao dia do casamento.",
-    "cta": "Agendar horário",
-    "cta2": "Conhecer a casa",
+    "texto": "Tratamentos faciais e corporais, cabelo, maquiagem e Dia da Noiva no mesmo endereço — com uma equipe que acompanha você do começo ao fim.",
+    "cta": "Agendar pelo WhatsApp",
+    "cta2": "Conhecer os tratamentos",
     "rodape_esquerda": "Av. Presidente Castelo Branco, 180",
     "rodape_direita": "Ter. a sáb., 9h–18h30",
-    "rolar": "Role para descobrir"
+    "rolar": "Role para conhecer"
   },
   "manifesto": {
-    "etiqueta": "O que nos move",
-    "titulo": "Duas coisas que quase nunca moram juntas",
+    "etiqueta": "Por que a Helenas",
+    "titulo": "Seu momento de cuidado, em um só lugar",
     "paragrafos": [
-      "Normalmente é assim: a estética fica num lugar, o cabelo em outro, a unha num terceiro. Você reserva três manhãs diferentes, repete a sua história três vezes e torce para que o resultado combine no fim.",
-      "A Helenas nasceu para resolver isso. Somos uma clínica de estética avançada com salão de beleza dentro — mesma recepção, mesma agenda, mesma equipe conversando entre si. O protocolo que a esteticista começa na sua pele é o mesmo que a maquiadora considera antes do casamento.",
-      "O ambiente foi pensado para ser confortável, refinado e calmo. Recebemos um público que volta — e é para esse público que a casa foi montada."
+      "Estética avançada e salão de beleza dividem o mesmo endereço, a mesma recepção e a mesma agenda. Na prática: você resolve pele, cabelo e unhas numa tarde só, e quem cuida de cada parte conversa entre si."
     ],
     "assinatura": "Julia Helenas",
-    "assinatura_papel": "Biomédica esteta e fundadora"
+    "assinatura_papel": "Biomédica esteta e fundadora",
+    "pilares": [
+      {
+        "titulo": "Atendimento personalizado",
+        "texto": "Cada protocolo nasce de uma avaliação presencial — da sua pele, do seu cabelo e do que você já faz em casa."
+      },
+      {
+        "titulo": "Tudo no mesmo lugar",
+        "texto": "Pele, corpo, cabelo, unhas e maquiagem sob a mesma administração. Uma agenda, um deslocamento."
+      },
+      {
+        "titulo": "Ambiente acolhedor",
+        "texto": "Sala reservada, tempo de atendimento adequado e um espaço pensado para você sair mais leve do que entrou."
+      }
+    ]
   },
   "casa": {
     "etiqueta": "A Clínica",
-    "titulo": "Uma casa, dois ofícios",
+    "titulo": "Dois cuidados, uma casa",
     "texto": "Role para ver como as duas metades da Helenas se encontram.",
     "paineis": [
       {
         "ordem": "01",
         "etiqueta": "De um lado",
         "titulo": "A clínica",
-        "texto": "Estética avançada conduzida por profissional com formação em biomedicina estética. Avaliação presencial antes de qualquer procedimento, protocolo montado a partir da sua pele e do seu histórico — nunca de uma tabela fechada.",
+        "texto": "Estética facial e corporal conduzida por profissional com formação em biomedicina estética. Tudo começa por uma avaliação presencial — é ela que define o protocolo.",
         "marcadores": [
           "Avaliação antes do procedimento",
-          "Protocolo, não pacote",
+          "Protocolo montado para você",
           "Sala reservada"
         ]
       },
@@ -131,7 +144,7 @@
         "ordem": "02",
         "etiqueta": "Do outro",
         "titulo": "O salão",
-        "texto": "Cabelo, unhas, sobrancelhas e maquiagem com o mesmo tempo e o mesmo critério que dedicamos à estética. Uma sobrancelha aqui não é encaixe de quinze minutos entre dois atendimentos.",
+        "texto": "Cabelo, unhas, sobrancelhas e maquiagem com o mesmo tempo e o mesmo critério da estética. Cada serviço tem a duração que realmente precisa.",
         "marcadores": [
           "Design feito no espelho, com você",
           "Materiais esterilizados",
@@ -142,18 +155,18 @@
         "ordem": "03",
         "etiqueta": "No meio",
         "titulo": "A mesma recepção",
-        "texto": "Pele, cabelo e unhas podem entrar na mesma tarde. Quem cuida da sua pele sabe o que a maquiadora vai precisar; quem faz o seu cabelo sabe a data do seu evento. O plano é combinado antes, não improvisado na hora.",
+        "texto": "Pele, cabelo e unhas podem entrar na mesma tarde. Quem cuida da sua pele sabe o que a maquiadora vai precisar; quem faz o seu cabelo sabe a data do seu evento.",
         "marcadores": [
           "Uma agenda, não três",
-          "Equipe que se conversa",
+          "Equipe integrada",
           "Um deslocamento só"
         ]
       }
     ]
   },
   "numeros": {
-    "etiqueta": "Em números",
-    "titulo": "Três anos de casa aberta",
+    "etiqueta": "A casa em números",
+    "titulo": "Desde 2022, em Londrina",
     "itens": [
       {
         "valor": "2022",
@@ -171,17 +184,17 @@
         "detalhe": "acompanhando o dia a dia da clínica"
       },
       {
-        "valor": "5",
+        "valor": "4",
         "rotulo": "frentes de cuidado",
-        "detalhe": "pele, corpo, cabelo, beleza e noivas"
+        "detalhe": "pele, corpo, cabelo e beleza"
       }
     ]
   },
   "tratamentos": {
     "etiqueta": "Tratamentos",
-    "titulo": "Quatro frentes, uma casa",
-    "texto": "Da limpeza de pele mensal ao penteado do casamento. Toque em uma frente para ver tudo o que ela reúne — sem sair desta página.",
-    "abrir": "Ver os procedimentos"
+    "titulo": "O que você pode fazer aqui",
+    "texto": "Quatro frentes de cuidado e uma especialidade da casa. Toque em uma delas para ver tudo o que reúne.",
+    "abrir": "Quero saber mais"
   },
   "categorias": [
     {
@@ -189,7 +202,7 @@
       "nome": "Estética facial",
       "etiqueta": "Rosto",
       "chamada": "Pele tratada, do básico ao injetável",
-      "resumo": "Limpeza, protocolos de manutenção e procedimentos injetáveis conduzidos por profissional com formação em biomedicina estética.",
+      "resumo": "Cuidados personalizados para valorizar sua beleza natural, respeitando as características e as necessidades da sua pele.",
       "descricao": "O rosto é onde a maioria das clientes começa. Nossa abordagem é sequencial: primeiro entendemos o estado da pele — oleosidade, textura, manchas, sinais de flacidez — e só então definimos entre um protocolo de manutenção, um tratamento mais intensivo ou um procedimento injetável. Muita gente chega pedindo o injetável e sai com um plano de pele. Faz parte.",
       "procedimentos": [
         {
@@ -237,7 +250,7 @@
       "nome": "Corpo e bem-estar",
       "etiqueta": "Corpo",
       "chamada": "Massagem e cuidado corporal",
-      "resumo": "Massagens e terapias corporais em sala reservada, com tempo de sessão que respeita o motivo pelo qual você veio.",
+      "resumo": "Um tempo reservado para desacelerar: massagens e cuidado corporal em sala tranquila, sem pressa.",
       "descricao": "Essa é a parte mais silenciosa da casa. Massagem relaxante, cuidado com a tensão de pescoço e ombros e terapias corporais conduzidas sem pressa, em sala reservada. Boa parte das clientes chega aqui depois de uma semana pesada — e é exatamente para isso que a sala existe.",
       "procedimentos": [
         {
@@ -269,7 +282,7 @@
       "nome": "Cabelo e Head Spa",
       "etiqueta": "Cabelo",
       "chamada": "Do couro cabeludo à escova",
-      "resumo": "Tratamento capilar, escova, penteado e o Head Spa — protocolo de uma hora e meia que junta pele, couro cabeludo e massagem.",
+      "resumo": "Do cuidado com os fios ao Head Spa — uma experiência completa de tratamento e relaxamento do couro cabeludo.",
       "descricao": "O salão da casa cuida do cabelo em duas frentes: o serviço de sempre — corte, escova, penteado — e o tratamento de couro cabeludo, que é onde a estética e o cabelo se encontram. O Head Spa é o carro-chefe dessa área e é, provavelmente, o procedimento mais completo que fazemos em uma sessão só.",
       "procedimentos": [
         {
@@ -312,7 +325,7 @@
       "nome": "Beleza e detalhes",
       "etiqueta": "Beleza",
       "chamada": "Sobrancelha, unhas, maquiagem e depilação",
-      "resumo": "O cuidado que define o rosto e as mãos — feito com o mesmo tempo e o mesmo critério que dedicamos à estética.",
+      "resumo": "Sobrancelhas, unhas, maquiagem e depilação: os detalhes que terminam de compor o seu visual.",
       "descricao": "São os serviços de manutenção, aqueles que voltam no calendário. A diferença é o tempo dedicado a cada um: uma sobrancelha aqui não é encaixe de quinze minutos entre dois atendimentos. É design feito olhando o formato do seu rosto, com o espelho na mão e a sua opinião no meio.",
       "procedimentos": [
         {
@@ -353,42 +366,42 @@
     }
   ],
   "noivas": {
-    "etiqueta": "Noivas C.H",
-    "titulo": "O casamento começa meses antes do casamento",
-    "texto": "Julia Helenas é consultora de beleza de noiva — e essa é a especialidade que deu nome à casa. O acompanhamento não começa na manhã do casamento: começa quando ainda dá tempo de tratar a pele com calma.",
-    "abrir": "Ver a experiência completa",
+    "etiqueta": "Dia da Noiva",
+    "titulo": "Seu grande dia merece um cuidado à altura",
+    "texto": "Dos primeiros preparativos aos últimos detalhes, a Helenas acompanha você na construção da sua beleza para o casamento. Julia Helenas é consultora de beleza de noiva — e essa é a especialidade que deu nome à casa.",
+    "abrir": "Conhecer o Dia da Noiva",
     "intro_titulo": "Por que a noiva é a especialidade da casa",
     "intro_paragrafos": [
-      "A Clínica Helenas nasceu de um problema que Julia via de perto: noivas chegando ao casamento com a pele tratada num lugar, o cabelo em outro e a maquiagem em um terceiro — e o resultado final sendo uma surpresa para todo mundo, inclusive para a noiva.",
-      "Aqui o cronograma é um só. A pele começa a ser tratada com meses de antecedência, a prova de maquiagem e penteado acontece antes da data, e no dia do casamento a equipe que recebe você é a mesma que acompanhou o caminho inteiro."
+      "Quando pele, cabelo e maquiagem são tratados em lugares diferentes, o resultado final só aparece no dia — e vira surpresa para todo mundo, inclusive para a noiva.",
+      "Aqui o cronograma é um só. A pele começa a ser cuidada com meses de antecedência, a prova de maquiagem e penteado acontece antes da data, e no dia do casamento a equipe que recebe você é a mesma que acompanhou o caminho inteiro."
     ],
     "cronograma_titulo": "Como funciona o acompanhamento",
-    "cronograma_nota": "O calendário abaixo é o desenho mais comum. O seu é ajustado na primeira conversa, a partir da data do casamento e do estado da sua pele.",
+    "cronograma_nota": "Este é o desenho mais comum. O seu é ajustado na primeira conversa, a partir da data do casamento.",
     "cronograma": [
       {
-        "marco": "Primeira conversa",
+        "marco": "Primeiro contato",
         "quando": "assim que a data estiver definida",
-        "texto": "Entendemos a data, o estilo do casamento, o vestido e o que você já faz de cuidado. É aqui que o cronograma nasce — e quanto mais cedo acontecer, mais opções de tratamento cabem nele."
+        "texto": "Entendemos a data, o estilo do casamento, o vestido e o que você já faz de cuidado. É aqui que o cronograma nasce."
       },
       {
-        "marco": "Tratamento de pele",
+        "marco": "Cuidados prévios",
         "quando": "nos meses anteriores",
-        "texto": "Protocolo facial montado para chegar na data com a pele no melhor momento possível. Procedimentos que precisam de tempo de recuperação são agendados com folga suficiente — nunca perto do casamento."
+        "texto": "Protocolo facial montado para chegar na data com a pele no melhor momento possível. O que precisa de recuperação é agendado com folga."
       },
       {
-        "marco": "Prova de maquiagem e penteado",
+        "marco": "Provas de maquiagem e penteado",
         "quando": "semanas antes",
-        "texto": "Testamos maquiagem e penteado juntos, com os produtos e a iluminação que serão usados na data. Você sai da prova sabendo exatamente como vai estar — e com tempo de ajustar o que não convenceu."
+        "texto": "Testamos maquiagem e penteado juntos, com os produtos e a iluminação da data. Você sai sabendo exatamente como vai estar."
       },
       {
-        "marco": "Semana do casamento",
+        "marco": "Preparativos finais",
         "quando": "dias antes",
-        "texto": "Manutenções finais: sobrancelha, unhas e os retoques que combinamos. Nada de procedimento novo nessa fase."
+        "texto": "Sobrancelha, unhas e os retoques combinados. Nada de procedimento novo nessa fase."
       },
       {
-        "marco": "O dia",
+        "marco": "O dia do casamento",
         "quando": "a data",
-        "texto": "A casa recebe você e quem você quiser trazer. Maquiagem, penteado e finalização acontecem no ritmo do seu cronograma, com margem para o imprevisto que sempre aparece."
+        "texto": "A casa recebe você e quem você quiser trazer, no ritmo do seu cronograma e com margem para o imprevisto."
       }
     ],
     "inclui_titulo": "O que costuma entrar",
@@ -406,13 +419,13 @@
     "acompanhantes_titulo": "Madrinhas, mães e convidadas",
     "acompanhantes_texto": "Atendemos também quem vai com você. Maquiagem e penteado de madrinhas, mães e convidadas podem ser agendados para o mesmo dia — combine no fechamento para que a recepção reserve a agenda inteira.",
     "cta_titulo": "Conte a data do seu casamento",
-    "cta_texto": "A primeira conversa é sem compromisso e serve para desenhar o cronograma. Quanto antes, mais caminho a gente tem.",
-    "cta_rotulo": "Falar sobre o Dia da Noiva"
+    "cta_texto": "A primeira conversa é sem compromisso e serve para desenhar o cronograma. Quanto antes acontecer, mais opções cabem nele.",
+    "cta_rotulo": "Planejar meu Dia da Noiva"
   },
   "equipe_secao": {
     "etiqueta": "Equipe",
     "titulo": "Quem cuida de você",
-    "texto": "A Helenas é uma equipe pequena por escolha. Cada profissional acompanha a cliente do início ao fim do atendimento — e todas se falam quando um caso passa por mais de uma área."
+    "texto": "Cada profissional acompanha a cliente do início ao fim do atendimento — e todas se falam quando um caso passa por mais de uma área."
   },
   "equipe": [
     {
@@ -463,8 +476,8 @@
     }
   ],
   "depoimentos": {
-    "etiqueta": "Vocês",
-    "titulo": "O que dizem depois de sair daqui"
+    "etiqueta": "Avaliações",
+    "titulo": "O que dizem quem já passou por aqui"
   },
   "avaliacoes": [
     {
@@ -485,53 +498,57 @@
   ],
   "faq_secao": {
     "etiqueta": "Dúvidas",
-    "titulo": "Antes de marcar",
-    "texto": "As perguntas que mais chegam pelo WhatsApp."
+    "titulo": "Antes de agendar",
+    "texto": "Se a sua pergunta não estiver aqui, chame no WhatsApp — quem responde é a recepção."
   },
   "faq": [
     {
-      "p": "Preciso agendar ou vocês atendem por ordem de chegada?",
-      "r": "Todo atendimento é agendado. A agenda é montada com intervalo entre clientes justamente para que ninguém seja atendido com pressa — por isso não trabalhamos com encaixe por ordem de chegada. O agendamento é feito pelo WhatsApp."
+      "p": "Como faço para agendar?",
+      "r": "Pelo WhatsApp. É o canal mais rápido e quem responde é a recepção da clínica. Todo atendimento é agendado — não trabalhamos por ordem de chegada."
     },
     {
-      "p": "Dá para resolver pele, cabelo e unha no mesmo dia?",
-      "r": "Dá, e é o principal motivo de a clínica e o salão funcionarem no mesmo endereço. Avise no agendamento tudo o que você quer fazer: a recepção monta a sequência dos horários para que um procedimento não atrapalhe o outro."
+      "p": "Preciso de avaliação antes de um procedimento?",
+      "r": "Para os procedimentos estéticos, sim. A avaliação é presencial, sem procedimento no mesmo dia, e é o que define o que faz sentido para você."
     },
     {
-      "p": "Como funciona a primeira avaliação?",
-      "r": "É uma conversa presencial, sem procedimento. Olhamos a sua pele ou o seu cabelo de perto, perguntamos o que já foi feito antes, o que você usa em casa e o que espera. Ao final você sai com um plano — e com a informação de quanto tempo ele leva."
+      "p": "Posso agendar mais de um serviço no mesmo dia?",
+      "r": "Pode, e é o principal motivo de a clínica e o salão ficarem no mesmo endereço. Avise tudo o que quer fazer e a recepção monta a sequência."
     },
     {
-      "p": "Vocês garantem resultado?",
-      "r": "Não. Resultado estético depende de pele, histórico, idade, saúde e do cuidado que você mantém em casa. O que fazemos é explicar, antes, o que cada procedimento faz e o que ele não faz, para que a decisão seja sua e informada."
+      "p": "Como funciona o Dia da Noiva?",
+      "r": "O acompanhamento começa meses antes: cronograma de pele, provas de maquiagem e penteado e os preparativos da semana do casamento. Quanto antes você procurar, mais opções cabem no cronograma."
     },
     {
-      "p": "Com quanta antecedência devo procurar vocês para o casamento?",
-      "r": "Quanto antes melhor. Tratamento de pele precisa de meses para acontecer com calma e alguns procedimentos pedem distância da data. Se o casamento já está próximo, ainda assim vale conversar: montamos o cronograma possível dentro do tempo que houver."
+      "p": "Como consulto os valores?",
+      "r": "Pelo WhatsApp. O valor depende do que vai ser feito, e para os procedimentos estéticos depende também da avaliação."
+    },
+    {
+      "p": "Quais são os horários de atendimento?",
+      "r": "De terça a sábado, das 9h às 18h30."
+    },
+    {
+      "p": "Onde fica a Clínica Helenas?",
+      "r": "Na avenida Presidente Castelo Branco, 180, bairro Presidente, em Londrina."
     },
     {
       "p": "Homens são atendidos?",
-      "r": "Sim. O Head Spa e as massagens atendem homens e mulheres, e os demais serviços também."
+      "r": "Sim. O Head Spa, as massagens e os demais serviços atendem homens e mulheres."
     },
     {
-      "p": "Quanto tempo dura um atendimento?",
-      "r": "Varia por procedimento. O Head Spa completo leva cerca de uma hora e meia; uma sobrancelha, bem menos. No agendamento informamos a duração prevista para que você organize o seu dia."
-    },
-    {
-      "p": "Onde fica a clínica?",
-      "r": "Na avenida Presidente Castelo Branco, 180, bairro Presidente, em Londrina. Atendemos de terça a sábado, das 9h às 18h30."
+      "p": "Vocês garantem resultado?",
+      "r": "Não. Resultado estético depende de pele, histórico, saúde e do cuidado em casa. O que fazemos é explicar antes o que cada procedimento faz — e o que não faz — para que a decisão seja sua."
     }
   ],
   "visita": {
-    "etiqueta": "Visita",
+    "etiqueta": "Onde estamos",
     "titulo": "Venha conhecer a casa",
-    "texto": "O agendamento é feito pelo WhatsApp — é o canal mais rápido e quem responde é a recepção da clínica, não um robô."
+    "texto": "O agendamento é feito pelo WhatsApp — quem responde é a recepção da clínica, não um robô."
   },
   "final": {
     "etiqueta": "Agende",
     "titulo": "Vamos começar pela avaliação",
-    "texto": "Conte o que você quer cuidar. A partir daí a gente monta o caminho — sem pacote pronto, sem promessa de resultado que não podemos garantir.",
-    "cta": "Falar com a Helenas"
+    "texto": "Conte o que você quer cuidar. A partir daí a gente monta o caminho, no seu tempo.",
+    "cta": "Agendar pelo WhatsApp"
   },
   "privacidade": {
     "etiqueta": "Jurídico",
@@ -672,6 +689,10 @@
     "equipe-julia-helenas-modal": {
       "alt": "Fotografias de clientes espalhadas sobre a mesa, na Clínica Helenas.",
       "foco": "50% 35%"
+    },
+    "head-spa": {
+      "alt": "Head Spa na Clínica Helenas.",
+      "foco": "50% 40%"
     }
   },
   "_pendencias": {
@@ -687,6 +708,23 @@
     "aparelhos": "Confirmar quais equipamentos e tecnologias a clínica utiliza. Não há seção de tecnologias no site por falta desse dado.",
     "responsavel_tecnico": "Confirmar responsável técnico e registro profissional, se aplicável, para o rodapé.",
     "redes": "Confirmar se Facebook e TikTok são canais oficiais em uso, para incluir no rodapé e no schema.",
-    "fotografia_direitos": "As fotos exibem clientes e modelos identificaveis. Ja estao em uso comercial no site da propria casa, mas confirme com a clinica que a autorizacao de uso de imagem cobre este site tambem antes de publicar."
+    "fotografia_direitos": "As fotos exibem clientes e modelos identificaveis. Ja estao em uso comercial no site da propria casa, mas confirme com a clinica que a autorizacao de uso de imagem cobre este site tambem antes de publicar.",
+    "head_spa_foto": "A secao do Head Spa foi montada para funcionar SEM fotografia — ela nao desenha campo vazio. Quando a clinica mandar uma foto real do procedimento, salve em assets/img/fotos/head-spa.webp e rode o gerador: a imagem entra sozinha, com o alt e o enquadramento que ja estao na secao `fotos`.",
+    "copy_conferir": "Os textos foram reescritos em 13/10/2026 a partir do que ja estava confirmado. Nenhum preco, duracao nova, tecnologia, certificacao ou promessa de resultado foi acrescentado. Vale a clinica ler antes de divulgar, sobretudo a secao do Head Spa e as perguntas frequentes."
+  },
+  "head_spa": {
+    "etiqueta": "Destaque da casa",
+    "titulo": "Uma pausa para cuidar de você",
+    "texto": "O Head Spa reúne cuidado capilar, massagem e um momento reservado só seu. É o procedimento mais completo que fazemos numa sessão só.",
+    "duracao": "Cerca de 1h30",
+    "etapas": [
+      "Máscara facial",
+      "Massagem relaxante",
+      "Detox de couro cabeludo",
+      "Hidratação dos fios",
+      "Escova de finalização"
+    ],
+    "nota": "Atende homens e mulheres. A composição exata da sessão é combinada no atendimento.",
+    "cta": "Quero conhecer o Head Spa"
   }
 }

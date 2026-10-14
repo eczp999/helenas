@@ -9,7 +9,7 @@ lá, a foto entra com o texto genérico da seção e recorte centralizado.
 Mínimo recomendado: 1400px no lado maior para retrato e painel,
 2400px de largura para as bandas de abertura dos modais (2,45:1).
 
-11 de 15 preenchidos.
+11 de 16 preenchidos.
 
 [ok] casa-1                     A casa — painel 1 (A clínica)
                                   alt: Julia Helenas, biomédica esteta e fundadora da Clínica Helenas.
@@ -35,6 +35,9 @@ Mínimo recomendado: 1400px no lado maior para retrato e painel,
 [  ] equipe-maria-gabriella     Equipe — retrato de Maria Gabriella
                                   alt: Retrato de Maria Gabriella
 
+[  ] head-spa                   Head Spa — seção de destaque
+                                  alt: Head Spa na Clínica Helenas.
+
 [ok] hero                       Hero — placa vertical do topo
                                   alt: Julia Helenas no espaço da Clínica Helenas, diante do letreiro luminoso da casa.
 
@@ -44,14 +47,14 @@ Mínimo recomendado: 1400px no lado maior para retrato e painel,
 [ok] noivas-banda               Modal de noivas — banda de abertura
                                   alt: Noiva sob o véu, pronta para a cerimônia, na Clínica Helenas.
 
-[ok] trat-beleza-e-detalhes     Modal de Beleza e detalhes — banda de abertura
+[ok] trat-beleza-e-detalhes     Cartão de Beleza e detalhes
                                   alt: Maquiagem sendo aplicada na Clínica Helenas.
 
-[ok] trat-cabelo-e-head-spa     Modal de Cabelo e Head Spa — banda de abertura
+[ok] trat-cabelo-e-head-spa     Cartão de Cabelo e Head Spa
                                   alt: Cabelo tratado e finalizado no salão da Clínica Helenas.
 
-[  ] trat-corpo-e-bem-estar     Modal de Corpo e bem-estar — banda de abertura
-                                  alt: Atendimento de corpo e bem-estar
+[  ] trat-corpo-e-bem-estar     Cartão de Corpo e bem-estar
+                                  alt: Atendimento de corpo e bem-estar na Clínica Helenas
 
-[ok] trat-estetica-facial       Modal de Estética facial — banda de abertura
+[ok] trat-estetica-facial       Cartão de Estética facial
                                   alt: Procedimento injetável facial conduzido na Clínica Helenas.

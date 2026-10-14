@@ -265,10 +265,12 @@
           scrollTrigger: {
             trigger: secao,
             start: "top top",
-            // Tela por painel extra: abaixo de 0,6 troca antes de dar tempo
-            // de ler; acima de 1,2 o usuário acha que o scroll quebrou. No
-            // telefone o passo encurta — o dedo percorre menos por gesto, e
-            // a mesma distância ali parece o dobro.
+            // Tela por painel extra. Abaixo de 0,6 troca antes de dar tempo
+            // de ler. A V4 usava 1,15 e pedia duas telas e meia de rolagem
+            // para mostrar três painéis de texto curto — esforço demais para
+            // informação simples. Em 0,8 a pausa ainda existe e a seção
+            // deixa de parecer que travou. No telefone encurta mais: o dedo
+            // percorre menos por gesto, e a mesma distância ali parece o dobro.
             end: () => "+=" + Math.round(window.innerHeight * op.passo * (paineis.length - 1)),
             pin: true,
             pinSpacing: true,
@@ -287,7 +289,7 @@
           const campoAtual = p.querySelector(".campo");
           tl.to(paineis[i - 1], { autoAlpha: 0, yPercent: -5, duration: 0.26 }, i - 1)
             .fromTo(p, { autoAlpha: 0, yPercent: 7 }, { autoAlpha: 1, yPercent: 0, duration: 0.3 }, i - 1 + 0.12)
-            .to({}, { duration: 0.62 }, i - 1 + 0.38);   // a pausa: é ela que separa cinema de enjoo
+            .to({}, { duration: 0.55 }, i - 1 + 0.45);   // a pausa: é ela que separa cinema de enjoo
           if (campoAnterior) tl.to(campoAnterior, { scale: 1.04, duration: 0.26 }, i - 1);
           if (campoAtual) tl.fromTo(campoAtual, { scale: 0.96 }, { scale: 1, duration: 0.42 }, i - 1 + 0.12);
         });
@@ -314,7 +316,7 @@
     mm.add("(min-width: 64rem) and (min-height: 41rem) and (prefers-reduced-motion: no-preference)", () =>
       montarCena({
         linha: 1.15, cascata: 0.08, heroSai: -9, entrada: "top 88%",
-        passo: 1.15, parallax: 1, desfoque: true,
+        passo: 0.8, parallax: 1, desfoque: true,
       }));
 
     /* -------- 5b. Telefone e tablet --------
@@ -327,7 +329,7 @@
     mm.add("(max-width: 63.99rem) and (min-height: 34rem) and (prefers-reduced-motion: no-preference)", () =>
       montarCena({
         linha: 0.85, cascata: 0.06, heroSai: -5, entrada: "top 92%",
-        passo: 0.95, parallax: 0.5, desfoque: false,
+        passo: 0.7, parallax: 0.5, desfoque: false,
       }));
 
     /* -------- 5b-bis. Tela muito baixa: telefone deitado --------
@@ -501,8 +503,11 @@
       ev.preventDefault();
       const campos = Array.from(form.querySelectorAll(".campo-form"));
       if (!campos.map(validar).every(Boolean)) {
-        if (aviso) { aviso.hidden = false; aviso.textContent = "Confira os campos destacados antes de enviar."; }
-        const primeiro = form.querySelector('[data-invalido="sim"] input, [data-invalido="sim"] textarea');
+        if (aviso) { aviso.hidden = false; aviso.textContent = "Confira os campos destacados antes de continuar."; }
+        // O select ESTAVA de fora desta lista: havia um <select> no formulário
+        // e, se fosse ele o campo inválido, o foco não ia para lugar nenhum —
+        // o aviso aparecia e a pessoa não descobria onde estava o erro.
+        const primeiro = form.querySelector('[data-invalido="sim"] input, [data-invalido="sim"] textarea, [data-invalido="sim"] select');
         if (primeiro) primeiro.focus();
         return;
       }
@@ -516,11 +521,30 @@
       if (assunto) linhas.push("Assunto: " + assunto);
       const recado = (d.get("mensagem") || "").trim();
       if (recado) linhas.push("", recado);
-      if (aviso) {
-        aviso.hidden = false;
-        aviso.textContent = "Abrindo o WhatsApp com a sua mensagem pronta. Se não abrir, use o botão ao lado.";
+      const destino = form.dataset.form + "?text=" + encodeURIComponent(linhas.join("\n"));
+      // O formulário NÃO envia nada: ele monta a mensagem e abre o WhatsApp.
+      // Dizer "mensagem enviada" aqui seria mentira — a conversa só existe
+      // depois que a pessoa aperta enviar lá dentro. O texto diz exatamente
+      // isso.
+      const janela = window.open(destino, "_blank", "noopener");
+      if (!aviso) return;
+      aviso.hidden = false;
+      if (janela) {
+        aviso.textContent = "Abrimos o WhatsApp com a sua mensagem pronta — é só revisar e enviar.";
+        return;
       }
-      window.open(form.dataset.form + "?text=" + encodeURIComponent(linhas.join("\n")), "_blank", "noopener");
+      // Bloqueador de pop-up: o window.open devolveu null e a conversa não
+      // abriu. Sem isto a pessoa ficava olhando para um aviso de sucesso e
+      // nada acontecia. Em vez do aviso, um link de verdade para tocar.
+      aviso.textContent = "";
+      const link = document.createElement("a");
+      link.href = destino;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.className = "link-filete";
+      link.textContent = "O navegador bloqueou a janela. Toque aqui para abrir o WhatsApp.";
+      aviso.appendChild(link);
+      link.focus();
     });
   }
 
