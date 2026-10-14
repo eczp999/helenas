@@ -200,9 +200,12 @@ def campo(id_foto, alt, classe="campo", onde="", parallax=None, prioritaria=Fals
                 '<img src="%s" alt="%s" %s decoding="async"%s%s></div>'
                 % (classe, e(id_foto), e(arquivo), e(alt), carga, par, foco))
     # Sem imagem o campo é decorativo: aria-hidden evita que o leitor de tela
-    # anuncie uma fotografia que não existe.
+    # anuncie uma fotografia que não existe. A classe campo--vazio existe para
+    # que o CSS possa encolher o campo onde ele atrapalha — num celular, uma
+    # placa de 409px em branco empilhada três vezes não lê como espaço
+    # negativo, lê como imagem quebrada.
     return ('<!-- CAMPO DE FOTO [%s]: %s -->'
-            '<div class="%s" data-campo="%s" aria-hidden="true"></div>'
+            '<div class="%s campo--vazio" data-campo="%s" aria-hidden="true"></div>'
             % (e(id_foto), e(alt), classe, e(id_foto)))
 
 

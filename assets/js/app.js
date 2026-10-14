@@ -173,30 +173,48 @@
 
     // Três pesos de entrada. O desfoque é exclusivo dos títulos: se tudo
     // entrasse desfocado ele viraria ruído e deixaria de significar foco.
-    const alvoDe = (el) => {
+    const alvoDe = (el, desfoque) => {
       const tipo = el.dataset.fx;
       if (tipo === "etiqueta") return { autoAlpha: 1, y: 0, duration: 0.7, ease: "power2.out" };
-      if (tipo === "titulo")   return { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 1, ease: "power3.out" };
+      if (tipo === "titulo") {
+        const t = { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" };
+        if (desfoque) t.filter = "blur(0px)";
+        return t;
+      }
       return { autoAlpha: 1, y: 0, duration: 0.9, ease: "power3.out" };
     };
-    const inicioDe = (el) => {
+    const inicioDe = (el, desfoque) => {
       const tipo = el.dataset.fx;
       if (tipo === "etiqueta") return { autoAlpha: 0, y: 30 };
-      if (tipo === "titulo")   return { autoAlpha: 0, y: 10, filter: "blur(3px)" };
+      if (tipo === "titulo")   return desfoque ? { autoAlpha: 0, y: 10, filter: "blur(3px)" }
+                                               : { autoAlpha: 0, y: 10 };
       return { autoAlpha: 0, y: 24 };
     };
     // O hero é o LCP: entra só com opacidade e um deslocamento curto, sem
     // cascata longa, para não atrasar a percepção de carregamento.
-    const revelarHero = () => {
+    const revelarHero = (desfoque) => {
       gsap.utils.toArray(".hero [data-fx]").forEach((el, i) => {
-        gsap.fromTo(el, inicioDe(el), { ...alvoDe(el), duration: 0.8, delay: 0.42 + i * 0.07 });
+        gsap.fromTo(el, inicioDe(el, desfoque),
+          { ...alvoDe(el, desfoque), duration: 0.8, delay: 0.42 + i * 0.07 });
       });
     };
 
     const mm = gsap.matchMedia();
 
-    /* -------- 5a. Desktop com movimento -------- */
-    mm.add("(min-width: 64rem) and (min-height: 41rem) and (prefers-reduced-motion: no-preference)", () => {
+    /* ------------------------------------------------------------------
+       A CENA É UMA SÓ. O que muda entre o telefone e o monitor são as
+       medidas, não o repertório — por isso ela mora numa função e os dois
+       ramos do matchMedia a chamam com números diferentes. Enquanto cada
+       faixa tinha o seu próprio bloco, o celular ficava para trás a cada
+       mudança: na V3 não tinha pin, não tinha parallax e não tinha a
+       sequência da casa, embora o texto da seção mandasse rolar para ver as
+       duas metades se encontrarem. Mandava fazer o que não acontecia.
+
+       A largura entra na CONSULTA, não num matchMedia lido aqui dentro: é
+       isso que faz o contexto ser refeito ao girar o aparelho ou arrastar a
+       janela por cima da fronteira.
+       ------------------------------------------------------------------ */
+    const montarCena = (op) => {
       root.classList.add("fx");
 
       // Hero: as linhas sobem de dentro do invólucro que corta. Dois
@@ -212,15 +230,15 @@
         // resíduo em pixels. Sem esta linha o título principal do site não
         // desenha em resolução nenhuma.
         gsap.fromTo(linhas, { yPercent: 101, y: 0 },
-          { yPercent: 0, y: 0, duration: 1.15, ease: "expo.out", stagger: 0.08, delay: 0.12 });
+          { yPercent: 0, y: 0, duration: op.linha, ease: "expo.out", stagger: op.cascata, delay: 0.12 });
       }
-      revelarHero();
+      revelarHero(op.desfoque);
 
       // Hero sai com leve deslocamento: dá profundidade sem parallax caro.
       const hero = document.querySelector(".hero");
       if (hero) {
         gsap.to(".hero__grade", {
-          yPercent: -9, autoAlpha: 0.35, ease: "none",
+          yPercent: op.heroSai, autoAlpha: 0.35, ease: "none",
           scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true },
         });
       }
@@ -228,12 +246,12 @@
       // Entradas padrão: uma por elemento, once, nunca raspadas pelo scroll.
       gsap.utils.toArray("[data-fx]:not(.hero [data-fx])").forEach((el) => {
         gsap.to(el, {
-          ...alvoDe(el),
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          ...alvoDe(el, op.desfoque),
+          scrollTrigger: { trigger: el, start: op.entrada, once: true },
         });
       });
 
-      // PIN 1 — a casa. Os três painéis empilham e trocam com o scroll.
+      // PIN — a casa. Os três painéis empilham e trocam com o scroll.
       document.querySelectorAll('[data-pin="pilha"]').forEach((secao) => {
         const palco = secao.querySelector("[data-palco]");
         const paineis = secao.querySelectorAll("[data-painel]");
@@ -247,9 +265,11 @@
           scrollTrigger: {
             trigger: secao,
             start: "top top",
-            // 0,9 de tela por painel extra: abaixo de 0,6 troca antes de dar
-            // tempo de ler; acima de 1,2 o usuário acha que o scroll quebrou.
-            end: () => "+=" + Math.round(window.innerHeight * 1.15 * (paineis.length - 1)),
+            // Tela por painel extra: abaixo de 0,6 troca antes de dar tempo
+            // de ler; acima de 1,2 o usuário acha que o scroll quebrou. No
+            // telefone o passo encurta — o dedo percorre menos por gesto, e
+            // a mesma distância ali parece o dobro.
+            end: () => "+=" + Math.round(window.innerHeight * op.passo * (paineis.length - 1)),
             pin: true,
             pinSpacing: true,
             anticipatePin: 1,
@@ -278,7 +298,7 @@
 
       // Parallax discreto nos campos: só transform, dentro de wrapper que corta.
       gsap.utils.toArray("[data-parallax]").forEach((el) => {
-        const q = parseFloat(el.dataset.parallax) || 10;
+        const q = (parseFloat(el.dataset.parallax) || 10) * op.parallax;
         gsap.fromTo(el, { yPercent: -q / 2 }, {
           yPercent: q / 2, ease: "none",
           scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true },
@@ -288,25 +308,42 @@
       // A limpeza do que NÃO é GSAP vai aqui. Tweens, timelines, triggers e
       // pin-spacers criados acima são revertidos sozinhos.
       return () => root.classList.remove("fx");
-    });
+    };
 
-    /* -------- 5b. Celular e tablet: sem pin, sem parallax -------- */
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      if (matchMedia("(min-width: 64rem) and (min-height: 41rem)").matches) return;
-      // Mesma armadilha do ramo 5a: um gsap.set({yPercent: 0}) sozinho zera a
-      // porcentagem e deixa o y em pixels que o GSAP extraiu do CSS — o
-      // título do topo ficava invisível em TODO celular e tablet. O y: 0
-      // explícito é o que resolve. Aqui a linha ainda sobe, só que mais
-      // curta que no desktop: é a mesma ideia, em menos tela.
-      const linhasCurtas = gsap.utils.toArray(".hero .linha > span");
-      if (linhasCurtas.length) {
-        gsap.fromTo(linhasCurtas, { yPercent: 101, y: 0 },
-          { yPercent: 0, y: 0, duration: 0.85, ease: "expo.out", stagger: 0.06, delay: 0.1 });
+    /* -------- 5a. Monitor -------- */
+    mm.add("(min-width: 64rem) and (min-height: 41rem) and (prefers-reduced-motion: no-preference)", () =>
+      montarCena({
+        linha: 1.15, cascata: 0.08, heroSai: -9, entrada: "top 88%",
+        passo: 1.15, parallax: 1, desfoque: true,
+      }));
+
+    /* -------- 5b. Telefone e tablet --------
+       Mesma cena, medidas de tela pequena: a linha do título sobe mais
+       rápido, a entrada dispara mais perto da borda (num telefone, 88% da
+       tela ainda está longe da vista), o passo do pin encurta e o parallax
+       cai pela metade — num campo estreito o mesmo deslocamento vira tremor.
+       O desfoque dos títulos sai: é o filtro mais caro da página, e o
+       aparelho com menos GPU é justamente o que mais o pagaria. */
+    mm.add("(max-width: 63.99rem) and (min-height: 34rem) and (prefers-reduced-motion: no-preference)", () =>
+      montarCena({
+        linha: 0.85, cascata: 0.06, heroSai: -5, entrada: "top 92%",
+        passo: 0.95, parallax: 0.5, desfoque: false,
+      }));
+
+    /* -------- 5b-bis. Tela muito baixa: telefone deitado --------
+       Abaixo de 34rem de altura não cabe seção pinada: o painel ficaria com
+       a foto cortada e o texto fora da tela — o mesmo defeito que a V3 tinha
+       no monitor. Aqui o layout volta ao fluxo normal e sobra a revelação. */
+    mm.add("(max-height: 33.99rem) and (prefers-reduced-motion: no-preference)", () => {
+      const linhas = gsap.utils.toArray(".hero .linha > span");
+      if (linhas.length) {
+        gsap.fromTo(linhas, { yPercent: 101, y: 0 },
+          { yPercent: 0, y: 0, duration: 0.7, ease: "expo.out", stagger: 0.05, delay: 0.1 });
       }
       gsap.utils.toArray("[data-fx]").forEach((el) => {
-        gsap.fromTo(el, { autoAlpha: 0, y: 18 }, {
-          autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 92%", once: true },
+        gsap.fromTo(el, { autoAlpha: 0, y: 14 }, {
+          autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 94%", once: true },
         });
       });
     });

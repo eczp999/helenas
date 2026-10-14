@@ -297,18 +297,18 @@ button { font: inherit; color: inherit; }
   transform: translateY(101%);
   transition: transform var(--lento);
 }
-.botao:hover::after, .botao:focus-visible::after { transform: translateY(0); }
+.botao:focus-visible::after { transform: translateY(0); }
 
 .botao--primario { background: var(--tinta); color: var(--porcelana); }
 .botao--primario::after { background: var(--rose-forte); }
 
 .botao--contorno { border-color: currentColor; color: var(--pg-fg); }
 .botao--contorno::after { background: var(--pg-fg); }
-.botao--contorno:hover, .botao--contorno:focus-visible { color: var(--pg-bg); }
+.botao--contorno:focus-visible { color: var(--pg-bg); }
 
 .botao--claro { border-color: var(--linha-clara); color: var(--porcelana); }
 .botao--claro::after { background: var(--porcelana); }
-.botao--claro:hover, .botao--claro:focus-visible { color: var(--espresso); border-color: var(--porcelana); }
+.botao--claro:focus-visible { color: var(--espresso); border-color: var(--porcelana); }
 
 .botao svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
 
@@ -331,9 +331,8 @@ button { font: inherit; color: inherit; }
   border: 0;
   background-color: transparent;
 }
-.link-filete:hover, .link-filete:focus-visible { background-size: 100% 1px; }
+.link-filete:focus-visible { background-size: 100% 1px; }
 .link-filete .seta { transition: transform var(--lento); }
-.link-filete:hover .seta { transform: translateX(5px); }
 
 .seta { width: 16px; height: 16px; flex: none; }
 
@@ -408,7 +407,6 @@ button { font: inherit; color: inherit; }
   color: var(--pg-marca);
   transition: background var(--rapido), color var(--rapido);
 }
-a.marca:hover .marca__selo { background: var(--pg-marca); color: var(--pg-bg); }
 .marca__texto { display: grid; line-height: 1; }
 .marca__nome { font-family: var(--serifa); font-size: 1.375rem; letter-spacing: 0.16em; }
 .marca__assinatura {
@@ -440,8 +438,8 @@ a.marca:hover .marca__selo { background: var(--pg-marca); color: var(--pg-bg); }
   transform-origin: left;
   transition: transform var(--lento);
 }
-.topo__link:hover, .topo__link.is-ativo { color: var(--pg-fg); }
-.topo__link:hover::after, .topo__link.is-ativo::after { transform: scaleX(1); }
+.topo__link.is-ativo { color: var(--pg-fg); }
+.topo__link.is-ativo::after { transform: scaleX(1); }
 
 .topo__acao { display: none; }
 @media (min-width: 62rem) { .topo__acao { display: inline-flex; } }
@@ -594,7 +592,30 @@ html.menu-aberto, html.menu-aberto body { overflow: hidden; }
   aspect-ratio: 3 / 4;
   border-radius: var(--raio-placa) var(--raio-placa) 0 0;
 }
-@media (max-width: 61.99rem) { .hero__placa { display: none; } }
+
+/* No celular a placa existe — e precisa existir. A V3 a escondia abaixo de
+   62rem, então a primeira tela de quem chega pelo telefone era só tipografia
+   num fundo liso: uma clínica de estética sem nenhuma imagem, logo no alto.
+   E o navegador baixava a foto do mesmo jeito, escondida.
+
+   Aqui ela entra no fluxo, depois da nota e antes do rodapé: o texto
+   continua sobre fundo limpo — nada de véu por cima de letra — e a foto
+   ganha uma faixa própria. Sangra até a borda porque a tela é estreita e
+   o respiro lateral custa caro; os -24px espelham a calha do .env. */
+@media (max-width: 61.99rem) {
+  .hero__placa {
+    margin-top: var(--e7);
+    margin-inline: calc(var(--e5) * -1);
+  }
+  .hero__placa .campo {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--raio-placa) var(--raio-placa) 0 0;
+  }
+}
+@media (min-width: 60rem) and (max-width: 61.99rem) {
+  /* Nessa faixa o .env usa calha de 64px, não de 24. */
+  .hero__placa { margin-inline: calc(var(--e8) * -1); }
+}
 
 .hero__rodape {
   position: relative;
@@ -755,9 +776,47 @@ html.menu-aberto, html.menu-aberto body { overflow: hidden; }
 /* Tela baixa (notebook de 1366×768 e afins): o corpo do painel cede um
    ponto para sobrar ar entre o último marcador e a borda inferior. Só aqui
    — em monitor alto o texto mantém o tamanho de leitura normal. */
-@media (max-height: 50rem) {
+@media (max-height: 50rem) and (min-width: 56rem) {
   .fx .painel p { font-size: 0.9375rem; }
   .fx .painel__marcadores li { font-size: 0.875rem; }
+}
+
+/* ---- O painel pinado numa tela estreita ---------------------------------
+   Abaixo de 56rem a .painel__grade é uma coluna só, e o palco tem de caber
+   em 100svh junto com a cabeça da seção. Num telefone de 375×812 sobram
+   cerca de 500px para numeral, etiqueta, título, parágrafo, três marcadores
+   E a fotografia.
+
+   A conta não fecha com as medidas do monitor — lá o numeral sozinho chega a
+   144px. Aqui tudo encolhe e a ordem das faixas passa a ser explícita: o
+   texto mede o que precisa, a fotografia fica com o resto. É por isso que a
+   foto vira uma faixa larga em vez de um retrato: numa coluna única, é a
+   altura que é escassa, não a largura.
+
+   A alternativa seria pôr o texto POR CIMA da foto. Fica mais bonito em
+   captura de tela e pior de ler: o parágrafo desta seção precisa de cinco
+   linhas, e cinco linhas sobre fotografia pedem um véu que cobre dois terços
+   da imagem — some a foto e some o contraste. */
+@media (max-width: 55.99rem) {
+  .fx .casa__cabeca { margin-bottom: clamp(var(--e3), 2vh, var(--e5)); }
+  .fx .casa__cabeca h2 { font-size: clamp(1.5rem, 4.2vh, 2.125rem); }
+  .fx .casa__cabeca .texto-g { font-size: 0.9375rem; }
+
+  .fx .painel__grade {
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(var(--e4), 2.4vh, var(--e6));
+    align-items: stretch;
+  }
+  .fx .painel__texto { min-height: 0; }
+
+  .fx .painel__ordem { font-size: clamp(1.75rem, 4.6vh, 2.5rem); margin-bottom: var(--e2); }
+  .fx .painel h3 { font-size: clamp(1.25rem, 3.4vh, 1.75rem); margin-top: var(--e1); }
+  .fx .painel p { margin-top: var(--e3); font-size: 0.875rem; max-width: none; }
+  .fx .painel__marcadores { margin-top: var(--e4); gap: var(--e2); }
+  .fx .painel__marcadores li { font-size: 0.8125rem; }
+
+  .fx .painel__campo { min-height: 120px; }
+  .fx .painel__campo .campo { height: 100%; width: 100%; }
 }
 
 /* -------------------------------------------------------------------------
@@ -824,10 +883,14 @@ html.menu-aberto, html.menu-aberto body { overflow: hidden; }
   gap: var(--e2);
 }
 .indice__seta { width: 28px; height: 28px; color: var(--pg-clara); transition: transform var(--lento), color var(--rapido); }
-.indice__botao:hover .indice__nome, .indice__botao:focus-visible .indice__nome { color: var(--pg-marca); }
-.indice__botao:hover .indice__seta, .indice__botao:focus-visible .indice__seta { transform: translateX(8px); color: var(--pg-marca); }
+.indice__botao:focus-visible .indice__nome { color: var(--pg-marca); }
+.indice__botao:focus-visible .indice__seta { transform: translateX(8px); color: var(--pg-marca); }
 @media (min-width: 48rem) {
-  .indice__botao:hover .indice__nome, .indice__botao:focus-visible .indice__nome { transform: translateX(10px); }
+  .indice__botao:focus-visible .indice__nome { transform: translateX(10px); }
+}
+/* 48rem alcança tablet, que é toque: o :hover precisa da mesma guarda. */
+@media (min-width: 48rem) and (hover: hover) and (pointer: fine) {
+  .indice__botao:hover .indice__nome { transform: translateX(10px); }
 }
 
 /* -------------------------------------------------------------------------
@@ -894,6 +957,24 @@ html.menu-aberto, html.menu-aberto body { overflow: hidden; }
 .membro .campo { aspect-ratio: 4 / 5; }
 .membro h3 { font-size: 1.5rem; }
 
+/* Três profissionais ainda sem retrato. Lado a lado no desktop, os três
+   campos vazios formam uma fileira regular e leem como espaço reservado.
+   Empilhados num celular viram três placas de 409px em branco, uma atrás da
+   outra — 1200px de nada, que o olho lê como imagem que não carregou.
+   Abaixo de 48rem o campo vazio sai e sobra o cartão: função, nome e
+   especialidades. Quando a foto chegar, o campo deixa de ser --vazio e
+   volta sozinho, sem tocar em nada. */
+@media (max-width: 47.99rem) {
+  .membro .campo--vazio { display: none; }
+  .equipe__grade { gap: var(--e6); }
+  .membro {
+    gap: var(--e3);
+    padding-bottom: var(--e5);
+    border-bottom: 1px solid var(--pg-linha);
+  }
+  .membro:last-child { border-bottom: 0; padding-bottom: 0; }
+}
+
 /* -------------------------------------------------------------------------
    13. Ato 8 — depoimentos. Coluna que segura + citações que passam.
    ------------------------------------------------------------------------- */
@@ -935,7 +1016,6 @@ html.menu-aberto, html.menu-aberto body { overflow: hidden; }
   transition: color var(--rapido);
 }
 .faq__item summary::-webkit-details-marker { display: none; }
-.faq__item summary:hover { color: var(--pg-marca); }
 .faq__sinal { position: relative; width: 16px; height: 16px; flex: none; margin-top: 0.4em; }
 .faq__sinal::before, .faq__sinal::after {
   content: "";
@@ -968,7 +1048,6 @@ html.menu-aberto, html.menu-aberto body { overflow: hidden; }
 .dado svg { width: 20px; height: 20px; color: var(--rose-forte); stroke: currentColor; fill: none; stroke-width: 1.2; margin-top: 3px; }
 .dado__rotulo { font-size: var(--t-etiqueta); letter-spacing: 0.18em; text-transform: uppercase; color: var(--tinta-clara); display: block; margin-bottom: 2px; }
 .dado__valor { color: var(--tinta); transition: color var(--rapido); }
-a.dado__valor:hover { color: var(--rose-forte); }
 .dado__extra { font-size: var(--t-mini); color: var(--tinta-suave); }
 .horarios { display: grid; gap: var(--e2); font-size: 0.9375rem; }
 .horarios li { display: flex; justify-content: space-between; gap: var(--e4); max-width: 30ch; }
@@ -1032,7 +1111,6 @@ a.dado__valor:hover { color: var(--rose-forte); }
    ------------------------------------------------------------------------- */
 .rodape { background: var(--espresso); color: rgba(250, 246, 242, 0.72); padding-block: var(--e8) var(--e7); font-size: 0.9375rem; }
 .rodape a { transition: color var(--rapido); }
-.rodape a:hover { color: var(--porcelana); }
 .rodape__grade { display: grid; gap: var(--e6); padding-bottom: var(--e6); border-bottom: 1px solid var(--linha-clara); }
 @media (min-width: 48rem) { .rodape__grade { grid-template-columns: 1.5fr 1fr 1fr; align-items: start; } }
 .rodape .marca__nome { color: var(--porcelana); }
@@ -1065,7 +1143,7 @@ a.dado__valor:hover { color: var(--rose-forte); }
   text-decoration-color: rgba(250, 246, 242, 0.3);
   transition: color var(--rapido), text-decoration-color var(--rapido);
 }
-.rodape__legal:hover, .rodape__legal:focus-visible { color: var(--porcelana); text-decoration-color: currentColor; }
+.rodape__legal:focus-visible { color: var(--porcelana); text-decoration-color: currentColor; }
 
 .rodape__sociais { display: flex; gap: var(--e3); }
 .rodape__sociais a {
@@ -1076,13 +1154,11 @@ a.dado__valor:hover { color: var(--rose-forte); }
   border-radius: 50%;
   transition: border-color var(--rapido), background var(--rapido), color var(--rapido);
 }
-.rodape__sociais a:hover { border-color: var(--rose); background: var(--rose); color: var(--espresso); }
 .rodape__sociais svg { width: 18px; height: 18px; fill: currentColor; }
 /* A lente e o ponto do ícone do Instagram são VAZADOS, não brancos: seguem o
    fundo do botão. Fixos em porcelana, viravam um anel claro sobre o disco
    rosa do hover. */
 .rodape__sociais .ico-vazado { fill: var(--espresso); transition: fill var(--rapido); }
-.rodape__sociais a:hover .ico-vazado { fill: var(--rose); }
 
 /* CTA persistente — entra depois do hero, some quando um modal abre */
 .zap {
@@ -1103,7 +1179,6 @@ a.dado__valor:hover { color: var(--rose-forte); }
   transition: opacity var(--rapido), translate var(--rapido), visibility var(--rapido), background var(--rapido);
 }
 .zap[data-visivel="sim"] { opacity: 1; visibility: visible; translate: 0; }
-.zap:hover { background: var(--rose-forte); }
 .zap svg { width: 27px; height: 27px; fill: currentColor; }
 
 /* -------------------------------------------------------------------------
@@ -1177,7 +1252,6 @@ dialog.modal[data-fechando="sim"]::backdrop { opacity: 0; transition-duration: 2
   color: var(--tinta-suave);
   transition: border-color var(--rapido), color var(--rapido);
 }
-.modal__fechar:hover { border-color: var(--rose-forte); color: var(--rose-forte); }
 .modal__fechar svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.5; fill: none; }
 
 .modal__corpo { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
@@ -1291,4 +1365,63 @@ dialog.modal[data-fechando="sim"]::backdrop { opacity: 0; transition-duration: 2
   .topo, .zap, .gaveta, .mapa, .trilho, dialog.modal, .campo { display: none; }
   body { background: #fff; color: #000; font-size: 11pt; }
   .ato { padding-block: 1rem; }
+}
+
+/* -------------------------------------------------------------------------
+   20. Ponteiro de verdade
+   Num aparelho de toque o :hover GRUDA: o navegador mantem o estado depois
+   do toque, ate que se toque em outro lugar. No celular isso aparece como
+   botao preso no preenchimento de hover e link preso com o filete cheio —
+   le-se como defeito. Por isso todo :hover mora aqui dentro.
+   O :focus-visible NAO esta aqui, de proposito: ele e do teclado e vale
+   sempre, inclusive num tablet com teclado acoplado.
+   ------------------------------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+  .botao:hover::after { transform: translateY(0); }
+  .botao--contorno:hover { color: var(--pg-bg); }
+  .botao--claro:hover { color: var(--espresso); border-color: var(--porcelana); }
+  .link-filete:hover { background-size: 100% 1px; }
+  .link-filete:hover .seta { transform: translateX(5px); }
+  a.marca:hover .marca__selo { background: var(--pg-marca); color: var(--pg-bg); }
+  .topo__link:hover { color: var(--pg-fg); }
+  .topo__link:hover::after { transform: scaleX(1); }
+  .indice__botao:hover .indice__nome { color: var(--pg-marca); }
+  .indice__botao:hover .indice__seta { transform: translateX(8px); color: var(--pg-marca); }
+  .faq__item summary:hover { color: var(--pg-marca); }
+  a.dado__valor:hover { color: var(--rose-forte); }
+  .rodape a:hover { color: var(--porcelana); }
+  .rodape__legal:hover { color: var(--porcelana); text-decoration-color: currentColor; }
+  .rodape__sociais a:hover { border-color: var(--rose); background: var(--rose); color: var(--espresso); }
+  .rodape__sociais a:hover .ico-vazado { fill: var(--rose); }
+  .zap:hover { background: var(--rose-forte); }
+  .modal__fechar:hover { border-color: var(--rose-forte); color: var(--rose-forte); }
+}
+
+/* -------------------------------------------------------------------------
+   21. Toque — área de alvo
+   Num ponteiro grosso (dedo) o alvo precisa ter altura própria, não só o
+   tamanho da letra. Medido na V3: o telefone da seção Contato tinha 23px de
+   altura, e os nove links do rodapé, 22px — metade do mínimo de 44px. Num
+   aparelho de toque isso é errar o link e cair no de baixo.
+   A regra só vale onde o ponteiro é grosso: no desktop o layout fica como
+   estava, porque lá 22px de alvo com mouse é confortável.
+   ------------------------------------------------------------------------- */
+@media (pointer: coarse) {
+  .rodape__lista a,
+  .rodape__legal,
+  a.dado__valor,
+  .link-filete {
+    /* padding, não min-height: o alvo cresce em volta da letra sem empurrar
+       a linha de base nem abrir buraco na coluna. */
+    padding-block: 11px;
+    /* O inline-block é o que faz o padding vertical valer num <a> de texto. */
+    display: inline-block;
+  }
+  .rodape__lista { gap: 0; }
+  .link-filete { display: inline-flex; }
+  /* O menu é a navegação inteira do celular: merece o alvo cheio. */
+  .menu-botao { min-height: 44px; }
+  .marca { min-height: 44px; }
+  /* Os três discos do rodapé passam de 40 para 44. */
+  .rodape__sociais a { width: 44px; height: 44px; }
 }

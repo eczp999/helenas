@@ -1,14 +1,79 @@
-# Site da Clínica Helenas — V3, página única
+# Site da Clínica Helenas — V4, página única
 
 Estética avançada e salão de beleza em Londrina/PR, com o Dia da Noiva como
 especialidade da casa.
 
-Esta é a **V3**: a V2 com a seção pinada consertada, três defeitos de
-renderização resolvidos e fotografia nos espaços que estavam em branco. A V2
-fica em `../v2` e a V1 — doze páginas separadas, no ar em
-`https://eczp999.github.io/helenas/` — em `../v1`. As três leem o mesmo tipo
-de arquivo de conteúdo e usam o mesmo gerador em Python puro: sem Node, sem
-framework, sem build de JavaScript.
+Esta é a **V4**: a V3 com o celular tratado como plataforma de primeira
+classe. A V3 fica em `../v3`, a V2 em `../v2` e a V1 — doze páginas separadas
+— em `../v1`. Todas leem o mesmo tipo de arquivo de conteúdo e usam o mesmo
+gerador em Python puro: sem Node, sem framework, sem build de JavaScript.
+
+---
+
+## O que mudou da V3 para a V4
+
+Tudo nesta versão saiu de abrir o site num telefone e olhar.
+
+| | V3 | V4 |
+|---|---|---|
+| Movimento no celular | só uma revelação por rolagem | a cena inteira: pin, parallax e a sequência da casa |
+| Seção A Clínica no celular | três blocos empilhados, sem sequência | sequência pinada, igual à do monitor |
+| Foto no topo do celular | nenhuma — e baixada mesmo assim | a placa aparece, sangrando até a borda |
+| `:hover` | 19 regras sem guarda | todas dentro de `@media (hover: hover)` |
+| Alvos de toque | 19 abaixo de 44px | nenhum |
+| Equipe sem retrato no celular | três placas de 409px em branco | o campo vazio sai e sobra o cartão |
+| Altura total no celular | 22,4 telas | 19,4 telas |
+
+### A cena virou uma função só
+
+O defeito de fundo da V3 era estrutural: havia dois blocos de código
+paralelos, um para monitor e outro para celular, e o do celular tinha só uma
+revelação simples. A cada mudança, o telefone ficava para trás. Chegou ao
+ponto de a seção A Clínica dizer *"role para ver como as duas metades da
+Helenas se encontram"* numa tela onde nada se encontrava — o texto mandava
+fazer o que não acontecia.
+
+Agora a cena mora em `montarCena(op)` e os dois ramos do `matchMedia` a
+chamam com medidas diferentes: a linha do título sobe mais rápido no celular,
+a entrada dispara mais perto da borda, o passo do pin encurta e o parallax cai
+pela metade. O desfoque dos títulos sai no telefone — é o filtro mais caro da
+página e o aparelho com menos GPU é justamente o que mais o pagaria.
+
+A largura entra na **consulta** do `matchMedia`, não num `matchMedia` lido
+dentro do manipulador: é isso que faz o contexto ser refeito ao girar o
+aparelho.
+
+### Três faixas de movimento
+
+| faixa | o que roda |
+|---|---|
+| ≥64rem de largura e ≥41rem de altura | cena completa, medidas de monitor |
+| <64rem de largura e ≥34rem de altura | cena completa, medidas de telefone |
+| <34rem de altura (telefone deitado) | fluxo normal, só revelação — não cabe seção pinada |
+
+### O painel pinado numa coluna só
+
+Num telefone de 375×812 sobram cerca de 500px para numeral, etiqueta, título,
+parágrafo, três marcadores **e** a fotografia. A conta não fecha com as
+medidas do monitor, onde o numeral sozinho chega a 144px. Abaixo de 56rem
+tudo encolhe e as faixas ficam explícitas: o texto mede o que precisa, a foto
+fica com o resto — e vira uma faixa larga, porque numa coluna única é a
+altura que é escassa, não a largura.
+
+A alternativa seria pôr o texto **por cima** da foto. Fica melhor em captura
+de tela e pior de ler: o parágrafo da seção precisa de cinco linhas, e cinco
+linhas sobre fotografia pedem um véu que cobre dois terços da imagem.
+
+### `:hover` num aparelho de toque
+
+Num aparelho de toque o `:hover` **gruda**: o navegador mantém o estado depois
+do toque, até que se toque em outro lugar. No celular isso aparece como botão
+presvo no preenchimento de hover e link preso com o filete cheio — lê-se como
+defeito. As 19 regras foram para dentro de
+`@media (hover: hover) and (pointer: fine)`.
+
+O `:focus-visible` ficou **de fora**, de propósito: ele é do teclado e vale
+sempre, inclusive num tablet com teclado acoplado.
 
 ---
 
@@ -179,14 +244,18 @@ não os divulga; se incomodarem em produção, apague-os — nada depende deles.
 
 ## A regra que governa o CSS e o JS
 
-**O layout sem a classe `.fx` é o layout legível, em fluxo normal.** Só o ramo
-desktop-com-movimento do `gsap.matchMedia` liga o empilhamento das seções
-pinadas. A consequência: celular, `prefers-reduced-motion`, JavaScript
-quebrado e robô de busca veem a mesma página inteira e navegável.
+**O layout sem a classe `.fx` é o layout legível, em fluxo normal.** Só um
+ramo com movimento do `gsap.matchMedia` liga o empilhamento das seções
+pinadas. A consequência: `prefers-reduced-motion`, JavaScript quebrado,
+telefone deitado e robô de busca veem a mesma página inteira e navegável.
+
+Na V3 o celular também caía nessa categoria. Não cai mais — ele recebe a
+cena completa, só com outras medidas. O que continua valendo é a garantia:
+**nenhum conteúdo depende de JavaScript para ser visto.**
 
 Um script embutido no `<head>` esconde-para-animar antes da primeira pintura,
 para não haver piscada — e desfaz isso sozinho se o `app.js` não confirmar que
-subiu em 4 segundos. Nenhum conteúdo depende de JavaScript para ser visto.
+subiu em 4 segundos.
 
 ## Acessibilidade
 
@@ -195,4 +264,6 @@ subiu em 4 segundos. Nenhum conteúdo depende de JavaScript para ser visto.
 - o menu do celular tranca a rolagem sem perder a posição da página;
 - campos de fotografia vazios são `aria-hidden`: o leitor de tela não anuncia
   uma foto que não existe;
-- contraste conferido; os numerais dourados usam um tom escurecido até 4,6:1.
+- contraste conferido; os numerais dourados usam um tom escurecido até 4,6:1;
+- nenhum alvo de toque abaixo de 44×44px onde o ponteiro é grosso;
+- `:hover` só onde existe ponteiro de verdade, para não grudar no toque.
