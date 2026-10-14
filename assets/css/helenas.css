@@ -469,7 +469,8 @@ button { font: inherit; color: inherit; }
 /* Trava de rolagem enquanto a gaveta está aberta. overflow: hidden na raiz
    preserva o scrollY — o truque de position: fixed no body o perderia e a
    página voltaria ao topo ao fechar o menu. */
-html.menu-aberto, html.menu-aberto body { overflow: hidden; }
+html.menu-aberto, html.menu-aberto body,
+html.modal-aberto, html.modal-aberto body { overflow: hidden; }
 
 .gaveta {
   position: fixed;
@@ -486,7 +487,9 @@ html.menu-aberto, html.menu-aberto body { overflow: hidden; }
 .gaveta[data-aberta="sim"] { opacity: 1; visibility: visible; transform: none; }
 @media (min-width: 62rem) {
   .gaveta { display: none; }
-  html.menu-aberto, html.menu-aberto body { overflow: visible; }
+  /* Só a gaveta destrava aqui — ela nem existe nesta faixa. O modal continua
+     travando o fundo em qualquer largura. */
+  html.menu-aberto:not(.modal-aberto), html.menu-aberto:not(.modal-aberto) body { overflow: visible; }
 }
 .gaveta__lista { display: grid; }
 .gaveta__lista a {
@@ -1566,4 +1569,63 @@ dialog.modal[data-fechando="sim"]::backdrop { opacity: 0; transition-duration: 2
 @media (prefers-reduced-motion: reduce) {
   .botao:active, .cartao__botao:active, .indice__botao:active,
   .menu-botao:active, .modal__fechar:active, .zap:active { transform: none; }
+}
+
+/* -------------------------------------------------------------------------
+   23. V6 — custo por quadro no celular
+
+   Fluidez não se ganha somando efeito: ganha-se tirando trabalho da linha
+   principal a cada quadro de rolagem. O que estava caro, em ordem:
+   ------------------------------------------------------------------------- */
+
+/* (1) O VIDRO DO CABEÇALHO.
+   `backdrop-filter` num elemento FIXO é o item mais caro desta página no
+   celular: a cada quadro de rolagem o navegador precisa reamostrar e borrar
+   a faixa de tela atrás da barra, porque o que está atrás mudou. Num
+   aparelho mediano isso sozinho come metade do orçamento de 16ms.
+
+   Onde o ponteiro é grosso, o vidro sai e o fundo vira opaco. Opaco, e não
+   translúcido-sem-blur: sem o borrão, o texto da página passando por baixo
+   atravessaria a barra e ficaria ilegível. No desktop o vidro fica — lá
+   sobra GPU e o efeito é parte do acabamento. */
+@media (pointer: coarse) {
+  .topo {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--pg-bg);
+  }
+  dialog.modal::backdrop {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* (2) SOMBRA GRANDE EM ELEMENTO QUE ROLA.
+   O raio de 96px do .ato--sobe obriga a pintar uma área bem maior que a
+   seção. Num telefone o desenho é quase imperceptível e a conta não é. */
+@media (pointer: coarse) {
+  .ato--sobe { box-shadow: none; }
+}
+
+/* (3) CAMADAS PARA O COMPOSITOR.
+   Os painéis da sequência e os campos com parallax mudam transform e opacity
+   em todo quadro. Promovidos a camada própria, o navegador os recompõe sem
+   repintar a seção inteira. `will-change` só nestes poucos elementos: posto
+   em muitos, consome memória de vídeo e piora o que vinha para melhorar. */
+.fx [data-painel],
+.fx [data-parallax] {
+  will-change: transform, opacity;
+}
+.fx .casa__palco {
+  /* Isola o palco: o que muda lá dentro não reflui o resto da página. */
+  contain: layout paint;
+}
+
+/* (4) ROLAGEM NATIVA NO TOQUE.
+   Sem Lenis no celular (ver app.js), quem conduz é o sistema. Estas duas
+   linhas pedem que ele conduza bem: inércia da plataforma e nada de
+   encadear a rolagem para a página quando um painel interno termina. */
+@media (pointer: coarse) {
+  html { -webkit-overflow-scrolling: touch; }
+  body { overscroll-behavior-y: none; }
 }

@@ -1,10 +1,67 @@
-# Site da Clínica Helenas — V5, página única
+# Site da Clínica Helenas — V6, página única
 
 Estética avançada e salão de beleza em Londrina/PR, com o Dia da Noiva como
 especialidade da casa.
 
-Esta é a **V5**: reformulação de conteúdo, ordem e conversão sobre a base
-técnica da V4. As versões anteriores ficam em `../v1` a `../v4`.
+Esta é a **V6**: fluidez no celular. As anteriores ficam em `../v1` a `../v5`.
+
+---
+
+## O que mudou da V5 para a V6
+
+Fluidez não se ganha somando efeito — ganha-se **tirando trabalho da linha
+principal a cada quadro de rolagem**. Tudo aqui é remoção.
+
+| | V5 | V6 |
+|---|---|---|
+| Fotos servidas ao celular | sempre 1200px de largura | 480 ou 800, pelo `srcset` |
+| Cabeçalho no toque | `backdrop-filter: blur(14px)`, fixo | fundo opaco, sem borrão |
+| Lenis no toque | rodando, sem conduzir nada | desligado |
+| `scrub` da sequência | `true` (cola na posição) | numérico (persegue) |
+| Mapa no celular | exigia tocar em "Ativar o mapa" | funciona direto |
+| Sombra de 96px ao rolar | pintada no celular | só no monitor |
+
+### As quatro remoções
+
+**Imagem grande demais.** Um telefone de 375px com densidade 2 precisa de
+~750px de imagem; o site entregava 1200×1800 para todo mundo — quatro vezes
+mais pixels para decodificar. Decodificar é trabalho na linha principal, e é
+ele que trava a rolagem no meio do gesto. Cada foto agora tem variantes de 480
+e 800, e cada ponto de uso declara a largura que ocupa.
+
+**O vidro do cabeçalho.** `backdrop-filter` num elemento **fixo** é o item mais
+caro da página no celular: a cada quadro o navegador reamostra e borra a faixa
+atrás da barra, porque o que está atrás mudou. Onde o ponteiro é grosso, o
+vidro sai e o fundo vira opaco. No monitor ele fica — lá sobra GPU.
+
+**O Lenis.** Com `syncTouch` desligado — e tem de ficar desligado, senão o
+gesto perde a inércia do sistema — o Lenis não conduz a rolagem do dedo. Ele
+só ficava escutando, girando um laço de rAF por quadro e empurrando um
+`ScrollTrigger.update` junto. Desligado no toque, somem o laço, a ponte e a
+regra do `lenis.css` que mata o `pointer-events` de todo iframe — por isso o
+mapa voltou a funcionar sem a tarja.
+
+**O `scrub: true`.** Com `true` o painel cola na posição exata do scroll e cada
+evento vira um degrau; no toque, onde os eventos chegam em rajada durante a
+inércia, é isso que se sente como travada. Com um número o ScrollTrigger
+**persegue** a posição — o dedo solta, a página continua e a troca acompanha.
+
+### Uma regressão que a mudança criou, e o conserto
+
+Sem Lenis, o `lenis.stop()` deixou de existir — e era ele que segurava a página
+de fundo com um modal aberto. O fundo passou a rolar atrás do modal e, ao
+fechar, a pessoa voltava noutro ponto. A trava agora é CSS, igual à da gaveta:
+`overflow: hidden` na raiz, que **preserva o scrollY**.
+
+### O que não deu para medir
+
+Não há como rodar um medidor de quadros neste ambiente: o painel de teste
+suspende o `requestAnimationFrame` sempre que perde o foco, e um medidor de
+FPS depende dele. As mudanças acima são remoções de custo conhecido e
+verificadas **estruturalmente** — o `srcset` escolhendo a variante estreita, o
+`backdrop-filter` computando `none`, o Lenis ausente do objeto global, o mapa
+interativo sem tarja. O ganho em quadros por segundo precisa ser confirmado num
+aparelho real.
 
 ---
 

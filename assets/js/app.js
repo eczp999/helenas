@@ -44,25 +44,41 @@
     // A barra de endereço do celular muda innerHeight e dispara resize a cada rolada.
     ScrollTrigger.config({ ignoreMobileResize: true });
 
-    /* ------------------------------------------- 2. LENIS E A PONTE */
-    lenis = new Lenis({
-      lerp: 0.09,
-      wheelMultiplier: 1,
-      syncTouch: false,
-      autoResize: true,
-      anchors: false,            // as âncoras são feitas à mão (seção 3)
-      respectReducedMotion: true,
-      prevent: (n) => n.hasAttribute && n.hasAttribute("data-lenis-prevent"),
-    });
-    // Exposto para depuração e para ferramentas de captura de tela.
-    window.lenis = lenis;
+    /* ------------------------------------------- 2. LENIS E A PONTE
 
-    // (a) ScrollTrigger lê a posição no mesmo frame em que o Lenis a escreveu.
-    lenis.on("scroll", ScrollTrigger.update);
-    // (b) Um único dono do loop. O ticker entrega segundos; lenis.raf quer ms.
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
-    // (c) Obrigatório: sem isto, um engasgo acima de 500ms faz o GSAP falsificar
-    //     o delta, o Lenis integra um relógio irreal e o scroll teleporta.
+       O Lenis só sobe onde existe RODA DE MOUSE. Num aparelho de toque ele
+       era peso morto: com syncTouch desligado — e tem de ficar desligado,
+       senão o gesto perde a inércia nativa do sistema — o Lenis não conduz a
+       rolagem do dedo. Ele apenas ficava escutando, girando um laço de rAF a
+       cada quadro e empurrando um ScrollTrigger.update junto, para reproduzir
+       uma rolagem que o próprio sistema operacional já faz melhor.
+
+       Desligado no toque, somem de uma vez: o laço por quadro, a ponte, e a
+       regra do lenis.css que mata o pointer-events de todo iframe — o mapa
+       volta a funcionar sozinho, sem a tarja de destravar. */
+    const temRoda = matchMedia("(pointer: fine)").matches;
+    if (temRoda) {
+      lenis = new Lenis({
+        lerp: 0.09,
+        wheelMultiplier: 1,
+        syncTouch: false,
+        autoResize: true,
+        anchors: false,            // as âncoras são feitas à mão (seção 3)
+        respectReducedMotion: true,
+        prevent: (n) => n.hasAttribute && n.hasAttribute("data-lenis-prevent"),
+      });
+      // Exposto para depuração e para ferramentas de captura de tela.
+      window.lenis = lenis;
+
+      // (a) ScrollTrigger lê a posição no mesmo frame em que o Lenis a escreveu.
+      lenis.on("scroll", ScrollTrigger.update);
+      // (b) Um único dono do loop. O ticker entrega segundos; lenis.raf quer ms.
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
+    }
+    // (c) Obrigatório com Lenis: sem isto, um engasgo acima de 500ms faz o GSAP
+    //     falsificar o delta, o Lenis integra um relógio irreal e o scroll
+    //     teleporta. Sem Lenis não atrapalha — o scrub passa a ler o scroll
+    //     nativo, que não depende do relógio do ticker.
     gsap.ticker.lagSmoothing(0);
   }
 
@@ -110,8 +126,14 @@
     gatilho = document.activeElement;
     modalAberto = modal;
     modal.removeAttribute("data-fechando");
-    modal.showModal();                 // top-layer, ESC e inércia de fundo de graça
-    if (lenis) lenis.stop();           // showModal não impede o Lenis de ler a roda
+    modal.showModal();                 // top-layer, ESC e foco preso de graça
+    // A trava da página de fundo é NOSSA, não do <dialog>. O showModal não
+    // impede a página de rolar atrás: com Lenis era o lenis.stop() que
+    // segurava, e sem Lenis — que é o caso no celular desde a V6 — o fundo
+    // rolava livre e, ao fechar, a pessoa voltava noutro ponto. A classe faz
+    // o mesmo que a da gaveta: overflow na raiz, que PRESERVA o scrollY.
+    root.classList.add("modal-aberto");
+    if (lenis) lenis.stop();           // na roda, o Lenis também precisa parar
     if (flutuante) flutuante.dataset.visivel = "nao";
     if (comHash && modal.id) history.pushState({ modal: modal.id }, "", "#" + modal.id);
     const fechar = modal.querySelector("[data-fechar]");
@@ -126,6 +148,7 @@
     const encerrar = () => {
       modal.close();
       modal.removeAttribute("data-fechando");
+      root.classList.remove("modal-aberto");
       if (lenis) lenis.start();
       // preventScroll é essencial: sem ele o navegador rola a página ao
       // devolver o foco, e numa página de quinze telas isso é desastre.
@@ -239,7 +262,7 @@
       if (hero) {
         gsap.to(".hero__grade", {
           yPercent: op.heroSai, autoAlpha: 0.35, ease: "none",
-          scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true },
+          scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: op.perseguir },
         });
       }
 
@@ -275,7 +298,13 @@
             pin: true,
             pinSpacing: true,
             anticipatePin: 1,
-            scrub: true,
+            // Número, não `true`. Com `true` o painel cola na posição exata
+            // do scroll e cada evento vira um degrau; no toque, onde os
+            // eventos chegam em rajada durante a inércia, isso é o que se
+            // sente como travada. Com um número o ScrollTrigger PERSEGUE a
+            // posição ao longo desses segundos — o dedo solta, a página
+            // continua e a troca acompanha em vez de saltar.
+            scrub: op.perseguir,
             fastScrollEnd: true,
             invalidateOnRefresh: true,
             refreshPriority: 1,
@@ -303,7 +332,7 @@
         const q = (parseFloat(el.dataset.parallax) || 10) * op.parallax;
         gsap.fromTo(el, { yPercent: -q / 2 }, {
           yPercent: q / 2, ease: "none",
-          scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true },
+          scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: op.perseguir },
         });
       });
 
@@ -316,7 +345,7 @@
     mm.add("(min-width: 64rem) and (min-height: 41rem) and (prefers-reduced-motion: no-preference)", () =>
       montarCena({
         linha: 1.15, cascata: 0.08, heroSai: -9, entrada: "top 88%",
-        passo: 0.8, parallax: 1, desfoque: true,
+        passo: 0.8, parallax: 1, desfoque: true, perseguir: 0.35,
       }));
 
     /* -------- 5b. Telefone e tablet --------
@@ -329,7 +358,7 @@
     mm.add("(max-width: 63.99rem) and (min-height: 34rem) and (prefers-reduced-motion: no-preference)", () =>
       montarCena({
         linha: 0.85, cascata: 0.06, heroSai: -5, entrada: "top 92%",
-        passo: 0.7, parallax: 0.5, desfoque: false,
+        passo: 0.7, parallax: 0.5, desfoque: false, perseguir: 0.6,
       }));
 
     /* -------- 5b-bis. Tela muito baixa: telefone deitado --------

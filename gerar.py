@@ -180,12 +180,73 @@ def arquivo_de_foto(id_foto):
     return None
 
 
-def campo(id_foto, alt, classe="campo", onde="", parallax=None, prioritaria=False):
+LARGURAS_VARIANTE = (480, 800)
+
+
+def jogo_de_larguras(arquivo):
+    """Monta o srcset com as variantes estreitas que existirem em disco.
+
+    Um telefone de 375px com densidade 2 precisa de ~750px de imagem. Até a V5
+    o site entregava 1200×1800 para todo mundo: mais que o dobro em cada lado,
+    quatro vezes mais pixels para decodificar. Decodificar imagem grande é
+    trabalho na linha principal, e é ele que faz a rolagem engasgar no meio do
+    gesto em aparelho mediano.
+
+    As variantes são geradas fora do gerador (uma vez, por script). Aqui só se
+    oferece o que existe — some o arquivo, some do srcset, e o src original
+    continua valendo."""
+    base, ext = os.path.splitext(arquivo)
+    jogo = []
+    for w in LARGURAS_VARIANTE:
+        rel = "%s-%dw%s" % (base, w, ext)
+        if os.path.exists(os.path.join(RAIZ, rel)):
+            jogo.append("%s %dw" % (rel, w))
+    if not jogo:
+        return ""
+    largura_real = medir_largura(arquivo)
+    if largura_real:
+        jogo.append("%s %dw" % (arquivo, largura_real))
+    return " srcset=\"%s\"" % e(", ".join(jogo))
+
+
+def medir_largura(rel):
+    """Largura em pixels de um WebP, lida do cabeçalho do arquivo.
+
+    O gerador é da biblioteca padrão por princípio — sem Pillow, sem
+    dependência que precise de instalação. Um WebP começa com RIFF....WEBP e
+    traz a largura logo depois; basta ler os primeiros 30 bytes."""
+    caminho = os.path.join(RAIZ, rel)
+    try:
+        with io.open(caminho, "rb") as f:
+            cab = f.read(30)
+        if cab[:4] != b"RIFF" or cab[8:12] != b"WEBP":
+            return None
+        formato = cab[12:16]
+        if formato == b"VP8 ":
+            return struct.unpack("<H", cab[26:28])[0] & 0x3FFF
+        if formato == b"VP8L":
+            bits = struct.unpack("<I", cab[21:25])[0]
+            return (bits & 0x3FFF) + 1
+        if formato == b"VP8X":
+            return (cab[24] | (cab[25] << 8) | (cab[26] << 16)) + 1
+    except Exception:
+        return None
+    return None
+
+
+def campo(id_foto, alt, classe="campo", onde="", parallax=None, prioritaria=False,
+          tamanhos=None):
     """Espaço de fotografia. Enquanto não houver arquivo o campo fica EM BRANCO
     — uma superfície um tom fora do fundo, com filete. Nada de monograma, nada
     de banco de imagens. Para preencher, salve a imagem em
     assets/img/fotos/<id> e rode o gerador de novo; o alt e o enquadramento
-    saem da seção `fotos` do dados.json."""
+    saem da seção `fotos` do dados.json.
+
+    `tamanhos` é o atributo sizes: a largura que a imagem OCUPA em cada faixa.
+    Sem ele o navegador assume 100vw e baixa sempre a maior variante, o que
+    anularia o srcset. O mesmo arquivo aparece em lugares de larguras bem
+    diferentes — o cartão e a banda do modal, por exemplo —, então o sizes é
+    de quem chama, não do arquivo."""
     arquivo = arquivo_de_foto(id_foto)
     ficha = FICHAS.get(id_foto) or {}
     # O alt genérico da seção só vale enquanto ninguém descreveu a imagem de
@@ -196,9 +257,12 @@ def campo(id_foto, alt, classe="campo", onde="", parallax=None, prioritaria=Fals
     foco = ' style="object-position:%s"' % e(ficha["foco"]) if ficha.get("foco") else ""
     if arquivo:
         carga = ('loading="eager" fetchpriority="high"' if prioritaria else 'loading="lazy"')
+        conjunto = jogo_de_larguras(arquivo)
+        medidas = ' sizes="%s"' % e(tamanhos) if (conjunto and tamanhos) else ""
         return ('<div class="%s campo--real" data-campo="%s">'
-                '<img src="%s" alt="%s" %s decoding="async"%s%s></div>'
-                % (classe, e(id_foto), e(arquivo), e(alt), carga, par, foco))
+                '<img src="%s"%s%s alt="%s" %s decoding="async"%s%s></div>'
+                % (classe, e(id_foto), e(arquivo), conjunto, medidas, e(alt),
+                   carga, par, foco))
     # Sem imagem o campo é decorativo: aria-hidden evita que o leitor de tela
     # anuncie uma fotografia que não existe. A classe campo--vazio existe para
     # que o CSS possa encolher o campo onde ele atrapalha — num celular, uma
@@ -424,7 +488,8 @@ def ato_hero():
        # ~85 KB que o celular paga por uma imagem que não vê. A saída real é
        # decidir se a placa deve aparecer no celular; enquanto não aparece, o
        # eager pelo menos rende no desktop.
-       "campo": campo("hero", "Recepção da Clínica Helenas", "campo", "Hero — placa vertical do topo", prioritaria=True),
+       "campo": campo("hero", "Recepção da Clínica Helenas", "campo", "Hero — placa vertical do topo",
+                         prioritaria=True, tamanhos="(max-width: 61.99rem) 100vw, 36vw"),
        "esq": e(h["rodape_esquerda"]), "rolar": e(h["rolar"]), "dir": e(h["rodape_direita"])}
 
 
@@ -473,7 +538,8 @@ def ato_casa():
 </article>""" % {"ord": e(p["ordem"]), "etiq": e(p["etiqueta"]), "titulo": e(p["titulo"]),
                  "texto": e(p["texto"]), "marc": marcadores,
                  "campo": campo("casa-%d" % (i + 1), "Ambiente da Clínica Helenas: %s" % p["titulo"],
-                                "campo", "A casa — painel %d (%s)" % (i + 1, p["titulo"]))}
+                                "campo", "A casa — painel %d (%s)" % (i + 1, p["titulo"]),
+                                tamanhos="(max-width: 55.99rem) 92vw, 44vw")}
     return """<section class="ato casa ato--sobe" id="a-casa" data-tema="escuro" data-pin="pilha" aria-labelledby="t-casa">
 <div class="env">
 <div class="casa__cabeca">
@@ -514,7 +580,8 @@ def ato_tratamentos():
         reune = "".join('<li>%s</li>' % e(p["nome"]) for p in cat["procedimentos"])
         foto = campo("trat-%s" % cat["slug"],
                      "Atendimento de %s na Clínica Helenas" % cat["nome"].lower(),
-                     "campo", "Cartão de %s" % cat["nome"])
+                     "campo", "Cartão de %s" % cat["nome"],
+                     tamanhos="(max-width: 46rem) 92vw, 46vw")
         # Sem arquivo, campo() devolve a placa vazia. Num cartão isso lê como
         # imagem quebrada, então o cartão simplesmente não recebe foto.
         tem_foto = "campo--real" in foto
@@ -563,7 +630,8 @@ def ato_head_spa():
     etapas = "".join('<li><span class="passo__n" aria-hidden="true">%d</span>%s</li>'
                      % (i, e(x)) for i, x in enumerate(s["etapas"], 1))
     foto = campo("head-spa", s["fotos_alt"] if "fotos_alt" in s else "Head Spa na Clínica Helenas",
-                 "campo", "Head Spa — seção de destaque")
+                 "campo", "Head Spa — seção de destaque",
+                 tamanhos="(max-width: 57.99rem) 92vw, 42vw")
     bloco_foto = '<div class="headspa__foto" data-fx>%s</div>' % foto if "campo--real" in foto else ""
     return """<section class="ato headspa%(semfoto)s" id="head-spa" aria-labelledby="t-headspa">
 <div class="env headspa__grade">
@@ -606,7 +674,8 @@ def ato_noivas():
 """ % {"etiq": e(n["etiqueta"]), "titulo": e(n["titulo"]), "texto": e(n["texto"]),
        "abrir": e(n["abrir"]), "seta": SETA, "etapas": etapas,
        "campo": campo("noiva", "Noiva sendo preparada na Clínica Helenas", "campo",
-                      "Noivas — retrato vertical ao lado do cronograma")}
+                      "Noivas — retrato vertical ao lado do cronograma",
+                      tamanhos="(max-width: 61.99rem) 92vw, 34vw")}
 
 
 def ato_equipe():
@@ -630,7 +699,8 @@ def ato_equipe():
 <div data-fx style="display:flex;gap:var(--e6);flex-wrap:wrap">%(mais)s%(insta)s</div>
 </div>
 </div>""" % {"campo": campo("equipe-" + apelido(m["nome"]), "Retrato de " + m["nome"],
-                            "campo", "Equipe — retrato de " + m["nome"]),
+                            "campo", "Equipe — retrato de " + m["nome"],
+                            tamanhos="(max-width: 61.99rem) 92vw, 34vw"),
              "papel": e(m["papel"]), "nome": e(m["nome"]),
              "bio": e(m["bio"][0]) if m.get("bio") else "", "areas": areas,
              "mais": mais, "insta": insta}
@@ -642,7 +712,8 @@ def ato_equipe():
             '<h3 style="margin-top:var(--e2)">%s</h3></div>'
             '<div class="perfil__areas">%s</div></article>'
             % (campo("equipe-" + apelido(m["nome"]), "Retrato de " + m["nome"], "campo",
-                     "Equipe — retrato de " + m["nome"]),
+                     "Equipe — retrato de " + m["nome"],
+                     tamanhos="(max-width: 47.99rem) 92vw, 30vw"),
                e(m["papel"]), e(m["nome"]),
                "".join('<span class="marca-area">%s</span>' % e(a) for a in m.get("areas", [])))
             for m in demais)
@@ -901,7 +972,8 @@ def modal_categoria(cat):
 <ul class="proc">%(linhas)s</ul>
 %(faq)s""" % {"desc": e(cat["descricao"]),
               "campo": campo("trat-" + cat["slug"], "Atendimento de %s" % cat["nome"].lower(),
-                             "campo campo--banda", "Modal de %s — banda de abertura" % cat["nome"]),
+                             "campo campo--banda", "Modal de %s — banda de abertura" % cat["nome"],
+                             tamanhos="(max-width: 61.99rem) 100vw, 78vw"),
               "linhas": linhas, "faq": faq}
 
     return modal("modal-" + cat["slug"], cat["etiqueta"], cat["chamada"], corpo,
@@ -938,7 +1010,8 @@ def modal_noivas():
 <p style="color:var(--tinta-suave);max-width:62ch">%(ac_txt)s</p>
 </div>""" % {"i_tit": e(n["intro_titulo"]), "intro": intro,
              "campo": campo("noivas-banda", "Noiva pronta após o Dia da Noiva",
-                            "campo campo--banda", "Modal de noivas — banda de abertura"),
+                            "campo campo--banda", "Modal de noivas — banda de abertura",
+                            tamanhos="(max-width: 61.99rem) 100vw, 78vw"),
              "c_tit": e(n["cronograma_titulo"]), "c_nota": e(n["cronograma_nota"]), "etapas": etapas,
              "inc_tit": e(n["inclui_titulo"]), "inc_nota": e(n["inclui_nota"]), "inclui": inclui,
              "ac_tit": e(n["acompanhantes_titulo"]), "ac_txt": e(n["acompanhantes_texto"])}
@@ -956,7 +1029,8 @@ def modal_pessoa(m):
 <div style="display:grid;gap:var(--e4);color:var(--tinta-suave);max-width:64ch">%(bio)s</div>
 <div class="perfil__areas" style="margin-top:var(--e6)">%(areas)s</div>%(insta)s""" % {
         "campo": campo("equipe-" + apelido(m["nome"]) + "-modal", "Retrato de " + m["nome"],
-                       "campo campo--banda", "Modal de %s — banda de abertura" % m["nome"]),
+                       "campo campo--banda", "Modal de %s — banda de abertura" % m["nome"],
+                       tamanhos="(max-width: 61.99rem) 100vw, 78vw"),
         "bio": bio, "areas": areas, "insta": insta}
     return modal("modal-" + apelido(m["nome"]), m["papel"], m["nome"], corpo,
                  "Falar com a Helenas", zap(W["conversar"]),
